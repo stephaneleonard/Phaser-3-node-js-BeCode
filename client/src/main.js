@@ -24,6 +24,10 @@ socket.on("playerPosition", (obj) => {
   console.log(obj);
 });
 
+socket.on("socketID", (obj) => {
+  console.log(obj);
+});
+
 const config = {
   type: Phaser.AUTO,
   width: 800,
