@@ -10,7 +10,7 @@ app.use(express.static("public"));
 // app.use(express.static("/phaser3-parcel-template/dist/"));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/phaser3-parcel-template/dist/index.html");
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 io.on("connection", (socket) => {
@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.log(`Server running`);
