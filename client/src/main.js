@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import HelloWorldScene from "./scenes/HelloWorldScene";
 import GameScene from "./scenes/GameScene";
+import smashGameScene from "./scenes/smashGameScene";
 const socket = io();
 
 document.addEventListener("keypress", (e) => {
@@ -26,14 +27,12 @@ socket.on("playerPosition", (obj) => {
 const config = {
   type: Phaser.AUTO,
   width: 800,
-  height: 600,
+  height: 500,
   physics: {
     default: "arcade",
     arcade: {
       gravity: { y: 300 },
     },
   },
-  scene: [HelloWorldScene],
+  scene: [smashGameScene],
 };
-
-export default new Phaser.Game(config);
