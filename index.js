@@ -20,10 +20,11 @@ io.on("connection", (socket) => {
   playerArray[id] = player;
   console.log(playerArray);
   console.log('new connection')
-  socket.on("keypress", (obj) => {
+  socket.on("position", (obj) => {
+    console.log(obj);
     const player = playerArray[socket.id];
     player.move(obj);
-    io.emit("playerPosition", [id , player.positionX , player.positionY]);
+    // io.emit("playerPosition", [id , player.positionX , player.positionY]);
   });
 });
 
