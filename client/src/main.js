@@ -7,16 +7,16 @@ const socket = io();
 
 document.addEventListener("keypress", (e) => {
   if (e.code == "KeyW") {
-    socket.emit("keypress", 1);
+    socket.emit("position", [100,100]);
   }
   if (e.code == "KeyS") {
-    socket.emit("keypress", 2);
+    socket.emit("position", [100,100]);
   }
   if (e.code == "KeyA") {
-    socket.emit("keypress", 3);
+    socket.emit("position", [100,100]);
   }
   if (e.code == "KeyD") {
-    socket.emit("keypress", 4);
+    socket.emit("position", [100,100]);
   }
 });
 
