@@ -87,11 +87,12 @@ function update ()
     {
         player.setVelocityX(0);
         player.anims.play('turn');
+        socket.emit("position",[player.x, player.y]);
+
     }
 
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-330);
-        socket.emit("position",[player.x, player.y]);
     }
 }
