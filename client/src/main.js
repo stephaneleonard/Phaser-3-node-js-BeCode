@@ -2,7 +2,8 @@ import Phaser from "phaser";
 
 import HelloWorldScene from "./scenes/HelloWorldScene";
 import GameScene from "./scenes/GameScene";
-import smashGameScene from "./scenes/smashGameScene";
+import SmashGameScene from "./scenes/SmashGameScene";
+import SceneStart from "./scenes/SceneStart";
 export const socket = io();
 
 document.addEventListener("keypress", (e) => {
@@ -38,5 +39,5 @@ const config = {
       gravity: { y: 300 },
     },
   },
-  scene: [smashGameScene],
+  scene: [SceneStart],
 };
