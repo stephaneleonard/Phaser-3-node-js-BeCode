@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const Player = require('./models/Player');
+const Player = require("./models/Player");
 
 const playerArray = {};
 
@@ -14,17 +14,21 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  const id = socket.id
+  const id = socket.id;
   const player = new Player(id);
-  io.to(id).emit('socketID', id);
+  io.to(id).emit("socketID", id);
   playerArray[id] = player;
   console.log(playerArray);
-  console.log('new connection')
+  console.log("new connection");
   socket.on("position", (obj) => {
     console.log(obj);
     const player = playerArray[socket.id];
-    player.move(obj);
-    // io.emit("playerPosition", [id , player.positionX , player.positionY]);
+    //player.move(obj);
+    socket.broadcast.emit("playerPosition", [
+      id,
+      player.positionX,
+      player.positionY,
+    ]);
   });
 });
 
