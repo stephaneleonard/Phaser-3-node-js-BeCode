@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   const id = socket.id
   const player = new Player(id);
+  io.to(id).emit('socketID', id);
   playerArray[id] = player;
   console.log(playerArray);
   console.log('new connection')
