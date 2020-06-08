@@ -1,0 +1,12 @@
+/* body{
+    font-family: 'ZCOOL KuaiLe', cursive;
+} */
+
+@font-face {
+    font-family : "Coiny";
+    src : url("Coiny-Regular.ttf");
+}
+
+body{
+    font-family: "Coiny";
+}
