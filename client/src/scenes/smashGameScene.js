@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { socket } from "../main.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -73,7 +74,7 @@ function update ()
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
-        
+        socket.emit("position",[player.x],[player.y]);
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)

@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import HelloWorldScene from "./scenes/HelloWorldScene";
 import GameScene from "./scenes/GameScene";
 import smashGameScene from "./scenes/smashGameScene";
-const socket = io();
+export const socket = io();
 
 document.addEventListener("keypress", (e) => {
   if (e.code == "KeyW") {
