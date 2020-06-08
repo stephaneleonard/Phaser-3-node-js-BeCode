@@ -23,6 +23,7 @@ let player;
 let platforms;
 let cursors;
 
+
 const game = new Phaser.Game(config);
 
 function preload ()
@@ -34,12 +35,12 @@ function preload ()
 
 function create ()
 {
-    this.add.image(400, 300, 'background');
+    this.add.image(400, 350, 'background');
     
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, 'ground');
 
-    player = this.physics.add.sprite(250, 300, 'dude');
+    player = this.physics.add.sprite(250, 350, 'dude');
 
     player.setCollideWorldBounds(true);
 
@@ -87,12 +88,12 @@ function update ()
     {
         player.setVelocityX(0);
         player.anims.play('turn');
-        socket.emit("position",[player.x, player.y]);
-
     }
 
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-330);
+        socket.emit("position",[player.x, player.y]);
+
     }
 }
