@@ -5,18 +5,24 @@ module.exports = class Player {
     this.positionY = 100;
   }
 
-  move(key){
-      if(key == 1){
-          this.positionX += 2;
-      }
-      else if(key == 2){
-        this.positionX -= 2;
-      }
-      else if(key == 3){
-        this.positionY += 2;
-      }
-      else if(key == 4){
-        this.positionY -= 2;
-      }
+  move(array){
+
+    this.positionX = array[0];
+    this.positionY = array[1];
   }
 };
+
+  //     if(key == 1){
+  //         this.positionX += 2;
+  //     }
+  //     else if(key == 2){
+  //       this.positionX -= 2;
+  //     }
+  //     else if(key == 3){
+  //       this.positionY += 2;
+  //     }
+  //     else if(key == 4){
+  //       this.positionY -= 2;
+  //     }
+  // }
+
