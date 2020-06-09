@@ -85,7 +85,6 @@ function create ()
 
 function update ()
 {
-<<<<<<< HEAD
     // if (cursors.left.isDown)
     // {
     //     player.setVelocityX(-160);
@@ -112,30 +111,3 @@ function update ()
     // }
         
 }
-=======
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-        socket.emit("position",[player.x, player.y]);
-        player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-        socket.emit("position",[player.x, player.y]);
-        player.anims.play('right', true);
-    }
-    else
-    {
-        player.setVelocityX(0);
-        player.anims.play('turn');
-    }
-
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
-        socket.emit("position",[player.x, player.y]);
-
-    }
-}
->>>>>>> master
