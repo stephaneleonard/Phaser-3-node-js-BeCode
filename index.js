@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const Player = require('./models/Player');
+const Player = require("./models/Player");
 
 const playerArray = {};
 
@@ -14,18 +14,31 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  const id = socket.id
+  const id = socket.id;
   const player = new Player(id);
-  io.to(id).emit('socketID', id);
+  io.to(id).emit("socketID", id);
+
+  //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-  console.log('new connection')
+  console.log(`player ${id} connected`);
+
+  //get the new position from a client
   socket.on("position", (obj) => {
-    console.log(obj);
     const player = playerArray[socket.id];
     player.move(obj);
-    // io.emit("playerPosition", [id , player.positionX , player.positionY]);
+    socket.broadcast.emit("playerPosition", [
+      id,
+      player.positionX,
+      player.positionY,
+    ]);
   });
+
+  socket.on('disconnect' , ()=> {
+    console.log(`player ${id} disconected`);
+    // delete this player from the array
+    delete playerArray[id];
+  })
 });
 
 const PORT = process.env.PORT || 3000;

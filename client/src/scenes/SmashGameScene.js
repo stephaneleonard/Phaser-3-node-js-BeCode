@@ -35,28 +35,24 @@ let platforms;
 
  function create ()
 {
+    const self = this;
+    socket.on("socketID", addplayer(self));
+
     this.background = this.add.image(0, 0, 'background');
     this.background.setOrigin(0,0)
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, 'ground');
-    platforms.setOrigin(0,0);
 
-    socket.on('socketID', ()=>{
-        console.log('coucou');
-        this.player = this.physics.add.sprite(250, 300, 'dude');
-        this.player.setCollideWorldBounds(true);
-        this.physics.add.collider(player, platforms);
-    })
+
 
     // player = this.physics.add.sprite(250, 300, 'dude');
-
     // player.setCollideWorldBounds(true);
 
     cursors = this.input.keyboard.createCursorKeys();
 
     // this.physics.add.collider(player, platforms);
 
-    //this.physics.add.collider(player2,platforms);
+    
 
     //animation spritesheet
     this.anims.create({
@@ -96,12 +92,18 @@ let platforms;
     {
         player.setVelocityX(0);
         player.anims.play('turn');
-        socket.emit("position",[player.x, player.y]);
-
     }
 
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-330);
+        socket.emit("position",[player.x, player.y]);
+
     }
+}
+function addplayer(self){
+    console.log('coucou');
+    self.player = self.physics.add.sprite(400, 300, 'dude');
+    self.player.setCollideWorldBounds(true);
+    self.physics.add.collider(self.player, self.platforms);
 }
