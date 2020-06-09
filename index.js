@@ -17,28 +17,19 @@ io.on("connection", (socket) => {
   const id = socket.id;
   const player = new Player(id);
   io.to(id).emit("socketID", id);
-
-  //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-  console.log(`player ${id} connected`);
-
-  //get the new position from a client
+  console.log("new connection");
   socket.on("position", (obj) => {
+    console.log(obj);
     const player = playerArray[socket.id];
-    player.move(obj);
+    //player.move(obj);
     socket.broadcast.emit("playerPosition", [
       id,
       player.positionX,
       player.positionY,
     ]);
   });
-
-  socket.on('disconnect' , ()=> {
-    console.log(`player ${id} disconected`);
-    // delete this player from the array
-    delete playerArray[id];
-  })
 });
 
 const PORT = process.env.PORT || 3000;

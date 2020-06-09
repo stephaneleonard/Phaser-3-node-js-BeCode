@@ -3,29 +3,26 @@ module.exports = class Player {
     this.socketID = socket;
     this.positionX = 100;
     this.positionY = 100;
-    //player damage
   }
 
-  move(array) {
+  move(array){
+
     this.positionX = array[0];
     this.positionY = array[1];
   }
-
-  /*
-   * update player damage counter
-   * input: int
-   * output: none
-   */
-  setPlayerDamage(damage) {
-    //add damage taken to the damage property
-  }
-
-  /*
-   * send player damage counter
-   * input: none
-   * output: int
-   */
-  gettPlayerDamage() {
-    // send player damage
-  }
 };
+
+  //     if(key == 1){
+  //         this.positionX += 2;
+  //     }
+  //     else if(key == 2){
+  //       this.positionX -= 2;
+  //     }
+  //     else if(key == 3){
+  //       this.positionY += 2;
+  //     }
+  //     else if(key == 4){
+  //       this.positionY -= 2;
+  //     }
+  // }
+
