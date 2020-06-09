@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Scene } from "phaser";
 
 import HelloWorldScene from "./scenes/HelloWorldScene";
 import GameScene from "./scenes/GameScene";
@@ -39,5 +39,5 @@ const config = {
       gravity: { y: 300 },
     },
   },
-  scene: [SceneStart],
+  scene: [SmashGameScene],
 };

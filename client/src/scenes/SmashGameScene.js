@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { socket } from "../main.js";
+import Player from "../../../models/Player";
 
 const config = {
     type: Phaser.AUTO,
@@ -18,33 +19,42 @@ const config = {
         update: update
     }
 };
-
-let player;
-let platforms;
-let cursors;
-
 const game = new Phaser.Game(config);
 
-function preload ()
+
+let player;
+let cursors;
+let platforms;
+
+ function preload ()
 {
     this.load.image('background', '/assets/background.png');
     this.load.image('ground', '/assets/platform.png');
     this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
-function create ()
+ function create ()
 {
-    this.add.image(400, 300, 'background');
+    this.background = this.add.image(0, 0, 'background');
+    this.background.setOrigin(0,0)
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, 'ground');
+    platforms.setOrigin(0,0);
 
-    player = this.physics.add.sprite(250, 300, 'dude');
+    socket.on('socketID', ()=>{
+        console.log('coucou');
+        this.player = this.physics.add.sprite(250, 300, 'dude');
+        this.player.setCollideWorldBounds(true);
+        this.physics.add.collider(player, platforms);
+    })
 
-    player.setCollideWorldBounds(true);
+    // player = this.physics.add.sprite(250, 300, 'dude');
+
+    // player.setCollideWorldBounds(true);
 
     cursors = this.input.keyboard.createCursorKeys();
 
-    this.physics.add.collider(player, platforms);
+    // this.physics.add.collider(player, platforms);
 
     //this.physics.add.collider(player2,platforms);
 
@@ -68,7 +78,7 @@ function create ()
     });
 }
 
-function update ()
+    function update ()
 {
     if (cursors.left.isDown)
     {

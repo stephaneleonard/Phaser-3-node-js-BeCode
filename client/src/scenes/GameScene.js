@@ -7,7 +7,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    
+    this.background = this.add.image(0,0,'background');
+    this.background.setOrigin(0,0);
   }
 
   createPlatforms() {
