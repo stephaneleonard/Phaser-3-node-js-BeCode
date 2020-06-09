@@ -24,6 +24,7 @@ let player;
 let platforms;
 let cursors;
 
+
 const game = new Phaser.Game(config);
 
 function preload ()
