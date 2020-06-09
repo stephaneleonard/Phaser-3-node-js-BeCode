@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-
+import {socket} from '../main';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -7,14 +7,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    
-  }
-
-  createPlatforms() {
-    
-  }
-
-  createPlayer() {
+    socket.on("party_ready", (obj) => {
+      console.log(obj);
+      this.scene.start('hello-world');
+    });
   }
 
   update() {}

@@ -1,39 +1,77 @@
-import Phaser from 'phaser'
+import Phaser from "phaser";
+import { socket } from "../main";
 
-export default class HelloWorldScene extends Phaser.Scene
-{
-	constructor()
-	{
-		super('hello-world')
-	}
+let player;
+let platforms;
+let cursors;
 
-	preload()
-    {
-        this.load.setBaseURL('https://labs.phaser.io')
+export default class HelloWorldScene extends Phaser.Scene {
+  constructor() {
+    super("hello-world");
+  }
 
-        this.load.image('sky', 'assets/skies/space3.png')
-        this.load.image('logo', 'assets/sprites/phaser3-logo.png')
-        this.load.image('red', 'assets/particles/red.png')
+  preload() {
+    this.load.image("background", "/assets/background.png");
+    this.load.image("ground", "/assets/platform.png");
+    this.load.spritesheet("dude", "./assets/dude.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    });
+  }
+
+  create() {
+    this.add.image(400, 300, "background");
+
+    platforms = this.physics.add.staticGroup();
+    platforms.create(400, 400, "ground");
+
+    player = this.physics.add.sprite(250, 300, "dude");
+
+    player.setCollideWorldBounds(true);
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    this.physics.add.collider(player, platforms);
+
+    //this.physics.add.collider(player2,platforms);
+
+    //animation spritesheet
+    this.anims.create({
+      key: "left",
+      frames: this.anims.generateFrameNumbers("dude", { start: 0, end: 3 }),
+      frameRate: 10,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "right",
+      frames: this.anims.generateFrameNumbers("dude", { start: 5, end: 8 }),
+      frameRate: 10,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "turn",
+      frames: [{ key: "dude", frame: 4 }],
+      frameRate: 20,
+    });
+  }
+
+  update() {
+    if (cursors.left.isDown) {
+      player.setVelocityX(-160);
+      socket.emit("position", [player.x, player.y]);
+      player.anims.play("left", true);
+    } else if (cursors.right.isDown) {
+      player.setVelocityX(160);
+      socket.emit("position", [player.x, player.y]);
+      player.anims.play("right", true);
+    } else {
+      player.setVelocityX(0);
+      player.anims.play("turn");
+      socket.emit("position", [player.x, player.y]);
     }
 
-    create()
-    {
-        this.add.image(400, 300, 'sky')
-
-        const particles = this.add.particles('red')
-
-        const emitter = particles.createEmitter({
-            speed: 100,
-            scale: { start: 1, end: 0 },
-            blendMode: 'ADD'
-        })
-
-        const logo = this.physics.add.image(400, 100, 'logo')
-
-        logo.setVelocity(100, 200)
-        logo.setBounce(1, 1)
-        logo.setCollideWorldBounds(true)
-
-        emitter.startFollow(logo)
+    if (cursors.up.isDown && player.body.touching.down) {
+      player.setVelocityY(-330);
     }
+  }
 }
