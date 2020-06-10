@@ -13,7 +13,7 @@ socket.on("socketID", (obj) => {
 const config = {
   type: Phaser.AUTO,
   width: 800,
-  height: 500,
+  height: 550,
   physics: {
     default: 'arcade',
     arcade: {
