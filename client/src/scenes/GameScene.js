@@ -1,5 +1,7 @@
 import Phaser from "phaser";
-import { socket } from "../main";
+import {
+  socket
+} from "../main";
 
 let player;
 let otherPlayer = {};
@@ -44,11 +46,19 @@ export default class HelloWorldScene extends Phaser.Scene {
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
     });
+    //texte
 
+    //personnages
     this.add.image(400, 300, "background");
 
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, "ground");
+    // texte = "Player 1 \n 20%";
+    // // style si nécessaire ->     
+    addText(this, 50, "#ff0044", "player 1 \n 20%")
+    addText(this, 250, "#F0FF00", "player 2 \n 25%")
+    addText(this, 450, "#6c4c7b", "player 3 \n 30%")
+    addText(this, 650, "#E0B3C5", "player 4 \n 40%")
 
     player = this.physics.add.sprite(250, 300, "dude");
 
@@ -63,19 +73,28 @@ export default class HelloWorldScene extends Phaser.Scene {
     //animation spritesheet
     this.anims.create({
       key: "left",
-      frames: this.anims.generateFrameNumbers("dude", { start: 0, end: 3 }),
+      frames: this.anims.generateFrameNumbers("dude", {
+        start: 0,
+        end: 3
+      }),
       frameRate: 10,
       repeat: -1,
     });
     this.anims.create({
       key: "right",
-      frames: this.anims.generateFrameNumbers("dude", { start: 5, end: 8 }),
+      frames: this.anims.generateFrameNumbers("dude", {
+        start: 5,
+        end: 8
+      }),
       frameRate: 10,
       repeat: -1,
     });
     this.anims.create({
       key: "turn",
-      frames: [{ key: "dude", frame: 4 }],
+      frames: [{
+        key: "dude",
+        frame: 4
+      }],
       frameRate: 20,
     });
   }
@@ -145,4 +164,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.playerArray[obj[0]].positionX = obj[1];
     console.log(this.playerArray[obj[0]]);
   }
+}
+
+function addText(scene, x, fill, text) {
+  var style = {
+    font: "25px Arial",
+    fill: fill,
+
+  };
+  scene.add.text(x, 440, text, style)
 }

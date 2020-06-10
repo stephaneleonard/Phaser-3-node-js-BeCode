@@ -15,11 +15,13 @@ const config = {
   width: 800,
   height: 500,
   physics: {
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 300 },
-          debug: false
-      }
+    default: 'arcade',
+    arcade: {
+      gravity: {
+        y: 300
+      },
+      debug: false
+    }
   },
   scene: [GameScene, HelloWorldScene],
 };
