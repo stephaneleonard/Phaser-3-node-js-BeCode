@@ -1,31 +1,13 @@
 import Phaser from "phaser";
 
-import HelloWorldScene from "./scenes/HelloWorldScene";
-import GameScene from "./scenes/GameScene";
+import HelloWorldScene from "./scenes/GameScene";
+import GameScene from "./scenes/preloadScene";
 // import smashGameScene from "./scenes/smashGameScene";
 export const socket = io();
-
-document.addEventListener("keypress", (e) => {
-  if (e.code == "KeyW") {
-    socket.emit("position", [100, 100]);
-  }
-  if (e.code == "KeyS") {
-    socket.emit("position", [100, 100]);
-  }
-  if (e.code == "KeyA") {
-    socket.emit("position", [100, 100]);
-  }
-  if (e.code == "KeyD") {
-    socket.emit("position", [100, 100]);
-  }
-});
-
-socket.on("playerPosition", (obj) => {
-  // console.log(obj);
-});
+export let socketID = null;
 
 socket.on("socketID", (obj) => {
-  console.log(obj);
+  socketID = obj;
 });
 
 const config = {
