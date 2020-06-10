@@ -56,11 +56,32 @@ export default class HelloWorldScene extends Phaser.Scene {
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, "ground");
     // texte = "Player 1 \n 20%";
-    // // style si nécessaire ->     
-    addText(this, 50, "#ff0044", "player 1 \n 20%")
-    addText(this, 250, "#F0FF00", "player 2 \n 25%")
-    addText(this, 450, "#6c4c7b", "player 3 \n 30%")
-    addText(this, 650, "#E0B3C5", "player 4 \n 40%")
+    // // style si nécessaire -> 
+    console.log("coucou");
+    // let id = this.playerArray
+    // console.log(id);
+    let damage = []
+    for (const key in this.playerArray) {
+      if (this.playerArray.hasOwnProperty(key)) {
+        let element = this.playerArray[key];
+        element = element.damage
+        damage.push(element)
+      }
+    }
+
+
+
+    // console.log(this.playerArray);
+    // 
+    // console.log(this.playerArray[id].damage);
+    // console.log(this.playerArray.damage);
+    console.log("coucou");
+
+
+    addText(this, 50, "#ff0044", "player 1 \n")
+    addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%")
+    addText(this, 450, "#6c4c7b", "player 3 \n" + damage[1] + "%")
+    addText(this, 650, "#E0B3C5", "player 4 \n " + damage[2] + "%")
 
     player = this.physics.add.sprite(250, 300, "dude");
     player.direction = 'right';
@@ -129,8 +150,8 @@ export default class HelloWorldScene extends Phaser.Scene {
       player.setVelocityY(-330);
     }
 
-    if(Phaser.Input.Keyboard.JustDown(hit)){
-        this.hitPlayer(player,direction);
+    if (Phaser.Input.Keyboard.JustDown(hit)) {
+      this.hitPlayer(player, direction);
     }
     this.updateDisplayedOtherPlayerPosition();
   }
@@ -175,14 +196,14 @@ export default class HelloWorldScene extends Phaser.Scene {
     console.log(this.playerArray[obj[0]]);
   }
 
-  hitPlayer(player,direction){
-    if(player.direction == 'right'){
+  hitPlayer(player, direction) {
+    if (player.direction == 'right') {
       direction = 1;
-    }else{
-      direction =0;
+    } else {
+      direction = 0;
     }
     console.log(`i try to kill you in position ${player.x}, ${player.y}, ${player.direction}`);
-    socket.emit('hit',direction);
+    socket.emit('hit', direction);
   }
 }
 
