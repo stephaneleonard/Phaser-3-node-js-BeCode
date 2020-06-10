@@ -5,6 +5,8 @@ let player;
 let otherPlayer = {};
 let platforms;
 let cursors;
+let hit;
+let direction = 1;
 
 export default class HelloWorldScene extends Phaser.Scene {
   constructor() {
@@ -51,10 +53,12 @@ export default class HelloWorldScene extends Phaser.Scene {
     platforms.create(400, 400, "ground");
 
     player = this.physics.add.sprite(250, 300, "dude");
+    player.direction = 'right';
 
     player.setCollideWorldBounds(true);
 
     cursors = this.input.keyboard.createCursorKeys();
+    hit = this.input.keyboard.addKey('c');
 
     this.physics.add.collider(player, platforms);
     this.displayOtherPlayer(this);
@@ -87,10 +91,12 @@ export default class HelloWorldScene extends Phaser.Scene {
    */
   update() {
     if (cursors.left.isDown) {
+      player.direction = 'left'
       player.setVelocityX(-160);
       socket.emit("position", [player.x, player.y]);
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
+      player.direction = 'right';
       player.setVelocityX(160);
       socket.emit("position", [player.x, player.y]);
       player.anims.play("right", true);
@@ -102,6 +108,10 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     if (cursors.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
+    }
+
+    if(Phaser.Input.Keyboard.JustDown(hit)){
+        this.hitPlayer(player,direction);
     }
     this.updateDisplayedOtherPlayerPosition();
   }
@@ -144,5 +154,15 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.playerArray[obj[0]].positionY = obj[2];
     this.playerArray[obj[0]].positionX = obj[1];
     console.log(this.playerArray[obj[0]]);
+  }
+
+  hitPlayer(player,direction){
+    if(player.direction == 'right'){
+      direction = 1;
+    }else{
+      direction =0;
+    }
+    console.log(`i try to kill you in position ${player.x}, ${player.y}, ${player.direction}`);
+    socket.emit('hit',direction);
   }
 }
