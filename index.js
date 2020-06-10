@@ -39,9 +39,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("hit", (dir) => {
-    // check if hit someone and send that result to the player to animate.
-    //first just always send ok
-    io.to(id).emit("hit");
+    // check if hit
     // update damage count on players hit and send this value to those player
   });
 
