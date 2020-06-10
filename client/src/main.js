@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Scene } from "phaser";
 
 import HelloWorldScene from "./scenes/GameScene";
 import GameScene from "./scenes/preloadScene";
