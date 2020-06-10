@@ -21,6 +21,10 @@ io.on("connection", (socket) => {
   //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
+  if (Object.keys(playerArray).length >= 4) {
+    io.emit("party_ready" , playerArray);
+    console.log("test");
+  }
   console.log(`player ${id} connected`);
 
   //get the new position from a client
@@ -34,11 +38,11 @@ io.on("connection", (socket) => {
     ]);
   });
 
-  socket.on('disconnect' , ()=> {
+  socket.on("disconnect", () => {
     console.log(`player ${id} disconected`);
     // delete this player from the array
     delete playerArray[id];
-  })
+  });
 });
 
 const PORT = process.env.PORT || 3000;
