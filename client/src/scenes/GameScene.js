@@ -64,7 +64,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.background.setOrigin(0,0);
 
     platforms = this.physics.add.staticGroup();
-    platforms.create(400, 400, "ground");
+    platforms.create(400, 400, "ground").setScale(0.2).refreshBody();
 
     let damage = []
     let myDamage = this.me.damage;
