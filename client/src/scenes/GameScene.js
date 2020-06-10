@@ -18,6 +18,7 @@ export default class HelloWorldScene extends Phaser.Scene {
    */
   init(data) {
     this.playerArray = data.playerArray;
+    this.me = data.me;
   }
 
   /*
@@ -40,6 +41,7 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   create() {
+    console.log('me' , this.me);
     //on playerPosition event update the playerArray
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
@@ -143,6 +145,5 @@ export default class HelloWorldScene extends Phaser.Scene {
   updatePlayerArray(obj) {
     this.playerArray[obj[0]].positionY = obj[2];
     this.playerArray[obj[0]].positionX = obj[1];
-    console.log(this.playerArray[obj[0]]);
   }
 }

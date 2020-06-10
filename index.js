@@ -21,7 +21,7 @@ io.on("connection", (socket) => {
   //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-  if (Object.keys(playerArray).length >= 4) {
+  if (Object.keys(playerArray).length >= 2) {
     io.emit("party_ready" , playerArray);
     console.log("test");
   }
@@ -36,6 +36,9 @@ io.on("connection", (socket) => {
       player.positionX,
       player.positionY,
     ]);
+
+    //test
+    player.hasHitOtherPlayer(playerArray , 0);
   });
 
   socket.on("disconnect", () => {
