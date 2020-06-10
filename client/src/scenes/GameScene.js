@@ -50,6 +50,10 @@ export default class HelloWorldScene extends Phaser.Scene {
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
     });
+    socket.on('hit' , (obj)=>{
+      console.log(obj);
+      // obj id damage
+    })
     //texte
 
     //personnages
