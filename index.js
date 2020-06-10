@@ -21,13 +21,8 @@ io.on("connection", (socket) => {
   //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-<<<<<<< HEAD
-  if (Object.keys(playerArray).length >= 1) {
-    io.emit("party_ready", playerArray);
-=======
   if (Object.keys(playerArray).length >= 2) {
-    io.emit("party_ready" , playerArray);
->>>>>>> server
+    io.emit("party_ready", playerArray);
     console.log("test");
   }
   console.log(`player ${id} connected`);
@@ -43,7 +38,7 @@ io.on("connection", (socket) => {
     ]);
 
     //test
-    player.hasHitOtherPlayer(playerArray , 0);
+    player.hasHitOtherPlayer(playerArray, 0);
   });
 
   socket.on("hit", (dir) => {
