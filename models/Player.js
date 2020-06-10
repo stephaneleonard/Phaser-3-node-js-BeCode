@@ -4,6 +4,7 @@ module.exports = class Player {
     this.positionX = 100;
     this.positionY = 100;
     //player damage
+    this.damage = 5; 
   }
 
   move(array) {
@@ -18,6 +19,7 @@ module.exports = class Player {
    */
   setPlayerDamage(damage) {
     //add damage taken to the damage property
+    this.damage += damage;
   }
 
   /*
@@ -25,7 +27,8 @@ module.exports = class Player {
    * input: none
    * output: int
    */
-  gettPlayerDamage() {
+  getPlayerDamage() {
     // send player damage
+    return this.damage; 
   }
 };
