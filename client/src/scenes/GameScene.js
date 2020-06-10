@@ -9,6 +9,7 @@ let platforms;
 let cursors;
 let hit;
 let direction = 1;
+let arrayText = []
 
 export default class HelloWorldScene extends Phaser.Scene {
   constructor() {
@@ -50,8 +51,9 @@ export default class HelloWorldScene extends Phaser.Scene {
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
     });
-    socket.on('hit' , (obj)=>{
-      console.log(obj);
+    socket.on('hit', (obj) => {
+      console.log(obj)
+      this.updateDamage(obj);
       // obj id damage
     })
     //texte
@@ -61,11 +63,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, "ground");
-    // texte = "Player 1 \n 20%";
-    // // style si nécessaire -> 
-    console.log("coucou");
-    // let id = this.playerArray
-    // console.log(id);
+
     let damage = []
     let myDamage = this.me.damage;
     for (const key in this.playerArray) {
@@ -76,10 +74,11 @@ export default class HelloWorldScene extends Phaser.Scene {
       }
     }
 
-    addText(this, 50, "#ff0044", "player 1 \n" + myDamage + "%")
-    addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%")
-    addText(this, 450, "#6c4c7b", "player 3 \n" + damage[1] + "%")
-    addText(this, 650, "#E0B3C5", "player 4 \n " + damage[2] + "%")
+    arrayText.push(addText(this, 50, "#ff0044", "player 1 \n" + myDamage + "%"))
+    arrayText.push(addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%"))
+    arrayText.push(addText(this, 450, "#6c4c7b", "player 3 \n" + damage[1] + "%"))
+    arrayText.push(addText(this, 650, "#E0B3C5", "player 4 \n " + damage[2] + "%"))
+
 
     player = this.physics.add.sprite(250, 300, "dude");
     player.direction = 'right';
@@ -128,6 +127,8 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   update() {
+    this.updateText()
+
     if (cursors.left.isDown) {
       player.direction = 'left'
       player.setVelocityX(-160);
@@ -193,6 +194,11 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.playerArray[obj[0]].positionX = obj[1];
   }
 
+  updateText() {
+    arrayText[0].setText("player 1 \n" + this.me.damage + "%")
+  }
+
+
   hitPlayer(player, direction) {
     if (player.direction == 'right') {
       direction = 1;
@@ -202,6 +208,14 @@ export default class HelloWorldScene extends Phaser.Scene {
     console.log(`i try to kill you in position ${player.x}, ${player.y}, ${player.direction}`);
     socket.emit('hit', direction);
   }
+
+  updateDamage(obj) {
+    if (this.me.socketID == obj[0]) {
+      this.me.damage = obj[1]
+    } else {
+      this.playerArray[obj[0]].damage = obj[1];
+    }
+  }
 }
 
 function addText(scene, x, fill, text) {
@@ -210,5 +224,6 @@ function addText(scene, x, fill, text) {
     fill: fill,
 
   };
-  scene.add.text(x, 440, text, style)
+  return scene.add.text(x, 440, text, style)
+
 }
