@@ -45,7 +45,7 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   create() {
-    console.log('me' , this.me);
+    console.log('me', this.me);
     //on playerPosition event update the playerArray
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
@@ -63,6 +63,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     // let id = this.playerArray
     // console.log(id);
     let damage = []
+    let myDamage = this.me.damage;
     for (const key in this.playerArray) {
       if (this.playerArray.hasOwnProperty(key)) {
         let element = this.playerArray[key];
@@ -71,16 +72,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       }
     }
 
-
-
-    // console.log(this.playerArray);
-    // 
-    // console.log(this.playerArray[id].damage);
-    // console.log(this.playerArray.damage);
-    console.log("coucou");
-
-
-    addText(this, 50, "#ff0044", "player 1 \n")
+    addText(this, 50, "#ff0044", "player 1 \n" + myDamage + "%")
     addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%")
     addText(this, 450, "#6c4c7b", "player 3 \n" + damage[1] + "%")
     addText(this, 650, "#E0B3C5", "player 4 \n " + damage[2] + "%")
