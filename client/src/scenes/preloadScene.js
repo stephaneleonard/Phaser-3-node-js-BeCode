@@ -14,8 +14,9 @@ export default class GameScene extends Phaser.Scene {
     socket.on("party_ready", (obj) => {
       // update playerArray
       let playerArray = obj;
+      let me = { ...obj[socketID]};
       delete playerArray[socketID];
-      this.scene.start("hello-world", { playerArray: playerArray });
+      this.scene.start("hello-world", { playerArray: playerArray , me: me });
     });
   }
 
