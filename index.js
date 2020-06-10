@@ -38,6 +38,11 @@ io.on("connection", (socket) => {
     ]);
   });
 
+  socket.on("hit", (dir) => {
+    // check if hit
+    // update damage count on players hit and send this value to those player
+  });
+
   socket.on("disconnect", () => {
     console.log(`player ${id} disconected`);
     // delete this player from the array
