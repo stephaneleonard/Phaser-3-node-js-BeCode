@@ -64,8 +64,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     player = this.physics.add.sprite(250, 300, "dude");
     player.direction = 'right';
-
-    player.setCollideWorldBounds(true);
+    player.setCollideWorldBounds(false);
 
     cursors = this.input.keyboard.createCursorKeys();
     hit = this.input.keyboard.addKey('c');
@@ -132,7 +131,10 @@ export default class HelloWorldScene extends Phaser.Scene {
     if(Phaser.Input.Keyboard.JustDown(hit)){
         this.hitPlayer(player,direction);
     }
+
+    this.deadPlayer(player.x,player.y);
     this.updateDisplayedOtherPlayerPosition();
+
   }
 
   /*
@@ -184,7 +186,29 @@ export default class HelloWorldScene extends Phaser.Scene {
     console.log(`i try to kill you in position ${player.x}, ${player.y}, ${player.direction}`);
     socket.emit('hit',direction);
   }
+
+  deadPlayer(positionX,positionY){
+
+    if(positionY > 700 ){
+      player.destroy();
+      console.log('you died');
+    }
+    else if(positionY< -200){
+      player.destroy();
+      console.log('you died');
+    }
+
+    if(positionX > 900 ){
+      player.destroy();
+      console.log("you're die");
+    }
+    else if(positionX< -200){
+      player.destroy();
+      console.log('you died');
+    }
+  }
 }
+
 
 function addText(scene, x, fill, text) {
   var style = {
