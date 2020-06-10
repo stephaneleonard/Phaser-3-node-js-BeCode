@@ -30,11 +30,11 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   preload() {
-    this.load.image("background", "/assets/background.png");
-    this.load.image("ground", "/assets/platform.png");
-    this.load.spritesheet("dude", "./assets/dude.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.image("background", "/assets/background_final.png");
+    this.load.image("ground", "/assets/plateforme_final.png");
+    this.load.spritesheet("dude", "./assets/player.png", {
+      frameWidth: 64,
+      frameHeight: 64,
     });
   }
 
@@ -51,10 +51,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     //texte
 
     //personnages
-    this.add.image(400, 300, "background");
+    this.background = this.add.image(0,0, "background");
+    this.background.setScale(0.8);
+    this.background.setOrigin(0,0);
 
     platforms = this.physics.add.staticGroup();
-    platforms.create(400, 400, "ground");
+    platforms.setOrigin(0,0);
+    platforms.create(400, 400, 'ground').setScale(0.2).refreshBody();
     // texte = "Player 1 \n 20%";
     // // style si nécessaire ->     
     addText(this, 50, "#ff0044", "player 1 \n 20%")
@@ -62,7 +65,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     addText(this, 450, "#6c4c7b", "player 3 \n 30%")
     addText(this, 650, "#E0B3C5", "player 4 \n 40%")
 
-    player = this.physics.add.sprite(250, 300, "dude");
+    player = this.physics.add.sprite(250, 200, "dude");
     player.direction = 'right';
     player.setCollideWorldBounds(false);
 
@@ -77,8 +80,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("dude", {
-        start: 0,
-        end: 3
+        start: 118,
+        end: 125
       }),
       frameRate: 10,
       repeat: -1,
@@ -86,8 +89,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.anims.create({
       key: "right",
       frames: this.anims.generateFrameNumbers("dude", {
-        start: 5,
-        end: 8
+        start: 144,
+        end: 151
       }),
       frameRate: 10,
       repeat: -1,
@@ -96,10 +99,26 @@ export default class HelloWorldScene extends Phaser.Scene {
       key: "turn",
       frames: [{
         key: "dude",
-        frame: 4
+        frame: 131
       }],
-      frameRate: 20,
+      frameRate: 24,
     });
+    this.anims.create({
+      key:'hit_left',
+      frames: this.anims.generateFrameNumbers('dude',{
+        start:65,
+        end:73
+      }),
+      frameRate:12,
+    })
+    this.anims.create({
+      key:'hit_right',
+      frames: this.anims.generateFrameNumbers('dude',{
+        start:92,
+        end:99
+      }),
+      frameRate:12,
+    })
   }
 
   /*
@@ -129,10 +148,16 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
 
     if(Phaser.Input.Keyboard.JustDown(hit)){
+        if(player.direction == "left"){
+          player.anims.play('hit_left',true);
+        }
+        else{
+          player.anims.play('hit_right',true);
+        }
         this.hitPlayer(player,direction);
     }
 
-    this.deadPlayer(player.x,player.y);
+    //this.deadPlayer(player.x,player.y);
     this.updateDisplayedOtherPlayerPosition();
 
   }
