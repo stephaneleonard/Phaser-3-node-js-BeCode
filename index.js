@@ -70,7 +70,6 @@ io.on("connection", (socket) => {
       const select = rooms.filter(room => 0 === room.id);
 
       console.log('select1',select);
-
       console.log(player);
       
       select[0].playerArray.push(player.socketID);
@@ -87,6 +86,9 @@ io.on("connection", (socket) => {
       {
         io.emit("party_ready", playerArray);
 
+        rooms.splice(rooms.indexOf(select),1);
+
+        console.log(rooms);
         console.log("game");
       }
     }

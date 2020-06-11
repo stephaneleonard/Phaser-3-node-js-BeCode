@@ -6,6 +6,13 @@ export default class GameScene extends Phaser.Scene {
     super("welcom-scene");
   }
 
+  preload(){
+    
+
+    game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
+    game.load.image('background','assets/misc/starfield.jpg');
+
+  }
 
   create(){
     /*
