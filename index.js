@@ -21,7 +21,7 @@ io.on("connection", (socket) => {
   //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-  if (Object.keys(playerArray).length >= 2) {
+  if (Object.keys(playerArray).length >= 1) {
     io.emit("party_ready" , playerArray);
     console.log("test");
   }
