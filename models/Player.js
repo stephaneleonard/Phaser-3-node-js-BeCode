@@ -1,6 +1,6 @@
 module.exports = class Player {
   constructor(socket) {
-    this.range = 10;
+    this.range = 40;
     this.socketID = socket;
     this.positionX = 100;
     this.positionY = 100;
@@ -45,9 +45,9 @@ module.exports = class Player {
     Object.keys(playerArray).forEach((e) => {
       //if it's not the same player calculate
       if (self.socketID != e) {
-        // 0 = right 1 = left
-        if (!direction) {
-          distance = this.positionX + 32 + this.range;
+        // 1 = right 0 = left
+        if (direction == 1) {
+          distance = this.positionX + this.range;
           //if in range and not behind player
           if (
             self.positionX < playerArray[e].positionX &&
@@ -63,7 +63,7 @@ module.exports = class Player {
             io.emit("hit", [playerArray[e].socketID, playerArray[e].damage]);
           }
         } else {
-          distance = this.positionX - 32 - this.range;
+          distance = this.positionX - this.range;
           if (
             self.positionX > playerArray[e].positionX &&
             distance <= playerArray[e].positionX &&
