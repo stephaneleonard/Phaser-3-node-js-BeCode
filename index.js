@@ -36,45 +36,27 @@ io.on("connection", (socket) => {
   socket.on("position", (obj) => {
     const player = playerArray[socket.id];
     player.move(obj);
-<<<<<<< HEAD
    }); 
 
-=======
->>>>>>> a2b109ab9fa1e1c78a1cbbd788627e2dd9f5f95a
 
     socket.broadcast.emit("playerPosition", [
       id,
       player.positionX,
       player.positionY,
     ]);
-<<<<<<< HEAD
 
     //test room
-    socket.on('createRoom',(data)=>
-    {
-      console.log('event createRoom',data);
-      
-      
-      //data.name //----------erreur?
-      const room = new Room (roomCount,data.name)
-      roomCount ++;
-      rooms.push(room);
+    
   
-      io.sockets.emit('update',rooms);
-    }
-  )
   
 
   socket.on('join',(data)=>
     {
-      rooms.filter(room =>{}) //????? roomCount++
+      //rooms.filter(room =>{}) //????? roomCount++
     }
   );
     
   
-=======
-  });
->>>>>>> a2b109ab9fa1e1c78a1cbbd788627e2dd9f5f95a
 
   socket.on("hit", (dir) => {
     // check if hit
