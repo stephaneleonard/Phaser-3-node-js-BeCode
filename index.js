@@ -80,7 +80,7 @@ io.on("connection", (socket) => {
       
 
       socket.emit('playerJoinRoom',rooms)
-
+      //app.use('/')
 
       if (select[0].playerArray.length >= 2)
       {

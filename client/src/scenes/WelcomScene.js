@@ -7,36 +7,52 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload(){
-    
 
-    game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-    game.load.image('background','assets/misc/starfield.jpg');
-
+    this.load.image("background", "/assets/background_final.png");
+    this.load.image('button', "/assets/button.png");
+    this.load.image('room',"/assets/dude.png")
   }
 
   create(){
+
+    this.add.image(300,200,'background');
+    const buttonCreate = this.add.sprite(400,500,"button").setInteractive();    
+
     /*
      * when party is ready launch next scene and pass it the array with the other players object
      *
      */
     //let buttonJoin('button');
 
+    let nameRoomIncrement = 0;
 
-    socket.emit('createRoom','data');
+    buttonCreate.on('pointerdown',()=>
+      {
+        socket.emit('createRoom',`Room${ + nameRoomIncrement + 1}`);
+        nameRoomIncrement++;
 
+        const room = this.add.sprite(100,100,'room')
+      }
+    );
+    
 
     socket.on('update',(data,idRoom = 111)=>
         {
             console.log('update',data);
-            
-            socket.emit('join',idRoom);
+            //create image and increment
+
+            buttonCreate.on('onclick',()=> //image not button
+              {
+                socket.emit('join',idRoom);
+              }
+            );  
         }
     );
 
 
     socket.on('joinEvent',(idRoom)=> //boutton
         {
-            socket.emit('join',idRoom);
+            buttonCreate.emit('join',idRoom);
         }
     );
 
