@@ -2,13 +2,22 @@ import Phaser, { Scene } from "phaser";
 
 import HelloWorldScene from "./scenes/GameScene";
 import GameScene from "./scenes/preloadScene";
+
+import WelcomeScene from "./scenes/WelcomScene";
 // import smashGameScene from "./scenes/smashGameScene";
 export const socket = io();
 export let socketID = null;
 
+//il a son id
+ //       -choix entre créer et rejoindre 
+
 socket.on("socketID", (obj) => {
   socketID = obj;
 });
+
+
+socket.emit('createRoom',{name:'hombre'})
+
 
 const config = {
   type: Phaser.AUTO,
@@ -23,6 +32,6 @@ const config = {
       debug: false
     }
   },
-  scene: [GameScene, HelloWorldScene],
+  scene: [WelcomeScene,GameScene, HelloWorldScene],
 };
 const game = new Phaser.Game(config);
