@@ -10,6 +10,7 @@ let cursors;
 let hit;
 let direction = 1;
 let arrayText = []
+const backgroundTab = ["/assets/background_final.png","/assets/Map_2.png","/assets/Map_3.png"];
 
 export default class HelloWorldScene extends Phaser.Scene {
   constructor() {
@@ -32,8 +33,8 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   preload() {
-    this.load.image("background", "/assets/background_final.png");
-    this.load.image("ground", "/assets/plateforme_final.png");
+    this.load.image("background", backgroundTab[this.randomNumber(3)]);
+    this.load.image("ground", "/assets/plateforme2.png");
     this.load.spritesheet("dude", "./assets/player.png", {
       frameWidth: 64,
       frameHeight: 64,
@@ -60,7 +61,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     //personnages
     this.background = this.add.image(0,0, "background");
-    this.background.setScale(0.8);
+    this.background.setScale(0.7);
     this.background.setOrigin(0,0);
 
     platforms = this.physics.add.staticGroup();
@@ -244,9 +245,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
   }
 
+  randomNumber(max){
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
   deadPlayer(positionX,positionY){
 
-    if(positionY > 750 ){
+    if(positionY > 700 ){
       player.destroy();
       console.log('you died');
     }
