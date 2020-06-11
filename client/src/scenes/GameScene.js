@@ -54,6 +54,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     socket.on('hit', (obj) => {
       this.updateDamage(obj);
       this.updateText()
+
       // obj id damage
     })
     //texte
