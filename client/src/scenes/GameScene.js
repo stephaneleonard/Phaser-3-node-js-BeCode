@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import {
-  socket
+  socket, socketID
 } from "../main";
 
 let player;
@@ -178,6 +178,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     //this.deadPlayer(player.x,player.y);
     this.updateDisplayedOtherPlayerPosition();
+    // this.updateDamage();
 
   }
 
@@ -222,7 +223,18 @@ export default class HelloWorldScene extends Phaser.Scene {
 
   updateText() {
     arrayText[0].setText("player 1 \n" + this.me.damage + "%")
+    let newDamage=[]
+    for (const key in this.playerArray) {
+      if (this.playerArray.hasOwnProperty(key)) {
+        let element = this.playerArray[key];
+        element = element.damage
+        newDamage.push(element)
+      }
+      arrayText[1].setText("player 2 \n" + newDamage[0] + "%")
+      arrayText[2].setText("player 3 \n" + newDamage[1] + "%")
+      arrayText[3].setText("player 4 \n" + newDamage[2] + "%")
   }
+}
 
 
   hitPlayer(player, direction) {
@@ -241,6 +253,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     } else {
       this.playerArray[obj[0]].damage = obj[1];
     }
+    
   }
 
   deadPlayer(positionX,positionY){
