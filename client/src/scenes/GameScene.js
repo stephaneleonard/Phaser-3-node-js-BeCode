@@ -10,6 +10,7 @@ let cursors;
 let hit;
 let direction = 1;
 let arrayText = []
+const backgroundTab = ["/assets/background_final.png","/assets/Map_2.png","/assets/Map_3.png"];
 
 export default class HelloWorldScene extends Phaser.Scene {
   constructor() {
@@ -32,8 +33,8 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   preload() {
-    this.load.image("background", "/assets/background_final.png");
-    this.load.image("ground", "/assets/plateforme_final.png");
+    this.load.image("background", backgroundTab[this.randomNumber(3)]);
+    this.load.image("ground", "/assets/plateforme2.png");
     this.load.spritesheet("dude", "./assets/player.png", {
       frameWidth: 64,
       frameHeight: 64,
@@ -61,7 +62,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     //personnages
     this.background = this.add.image(0,0, "background");
-    this.background.setScale(0.8);
+    this.background.setScale(0.7);
     this.background.setOrigin(0,0);
 
     platforms = this.physics.add.staticGroup();
@@ -76,7 +77,6 @@ export default class HelloWorldScene extends Phaser.Scene {
         damage.push(element)
       }
     }
-
     arrayText.push(addText(this, 50, "#ff0044", "player 1 \n" + myDamage + "%"))
     arrayText.push(addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%"))
     arrayText.push(addText(this, 450, "#6c4c7b", "player 3 \n" + damage[1] + "%"))
@@ -86,7 +86,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     player = this.physics.add.sprite(250, 200, "dude");
     player.direction = 'right';
     player.setCollideWorldBounds(false);
-
+    console.log(player);
     cursors = this.input.keyboard.createCursorKeys();
     hit = this.input.keyboard.addKey('c');
 
@@ -124,18 +124,20 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.anims.create({
       key:'hit_left',
       frames: this.anims.generateFrameNumbers('dude',{
-        start:65,
-        end:73
+        start:66,
+        end:72
       }),
-      frameRate:12,
+      frameRate:10,
+      repeat:-1,
     })
     this.anims.create({
       key:'hit_right',
       frames: this.anims.generateFrameNumbers('dude',{
         start:92,
-        end:99
+        end:98
       }),
-      frameRate:12,
+      frameRate:10,
+      repeat:-1,
     })
   }
 
@@ -175,8 +177,8 @@ export default class HelloWorldScene extends Phaser.Scene {
       }
       this.hitPlayer(player,direction);
     }
-    
-    //this.deadPlayer(player.x,player.y);
+
+    this.deadPlayer(player.x,player.y);
     this.updateDisplayedOtherPlayerPosition();
     
     // this.updateDamage();
@@ -261,6 +263,10 @@ export default class HelloWorldScene extends Phaser.Scene {
     
   }
 
+  randomNumber(max){
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
   deadPlayer(positionX,positionY){
 
     if(positionY > 700 ){
@@ -272,7 +278,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       console.log('you died');
     }
 
-    if(positionX > 900 ){
+    if(positionX > 1000 ){
       player.destroy();
       console.log("you're die");
     }

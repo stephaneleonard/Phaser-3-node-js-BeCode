@@ -1,6 +1,7 @@
 import Phaser, { Scene } from "phaser";
 
 import HelloWorldScene from "./scenes/GameScene";
+import Welcome from "./scenes/Welcome";
 import GameScene from "./scenes/preloadScene";
 // import smashGameScene from "./scenes/smashGameScene";
 export const socket = io();
@@ -13,7 +14,7 @@ socket.on("socketID", (obj) => {
 const config = {
   type: Phaser.AUTO,
   width: 800,
-  height: 550,
+  height: 500,
   physics: {
     default: 'arcade',
     arcade: {
@@ -23,6 +24,6 @@ const config = {
       debug: false
     }
   },
-  scene: [GameScene, HelloWorldScene],
+  scene: [Welcome,GameScene, HelloWorldScene],
 };
 const game = new Phaser.Game(config);
