@@ -41,7 +41,9 @@ io.on("connection", (socket) => {
   socket.on("position", (obj) => {
     const player = playerArray[socket.id];
     player.move(obj);
-    
+   }); 
+
+
     socket.broadcast.emit("playerPosition", [
       id,
       player.positionX,
@@ -54,7 +56,7 @@ io.on("connection", (socket) => {
       console.log('event createRoom',data);
       
       
-      //data.name
+      //data.name //----------erreur?
       const room = new Room (roomCount,data.name)
       roomCount ++;
       rooms.push(room);
@@ -64,9 +66,13 @@ io.on("connection", (socket) => {
   )
   
 
-  socket.on('join',())
+  socket.on('join',(data)=>
+    {
+      rooms.filter(room =>{}) //????? roomCount++
+    }
+  );
     
-  });
+  
 
   socket.on("hit", (dir) => {
     // check if hit
