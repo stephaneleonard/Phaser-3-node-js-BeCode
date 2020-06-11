@@ -8,6 +8,8 @@ let cursors;
 let hit;
 let direction = 1;
 let arrayText = [];
+let jumpCount = 2;
+
 const backgroundTab = [
   "/assets/background_final.png",
   "/assets/Map_2.png",
@@ -161,13 +163,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     if (this.me.knockback != 0) {
       if (this.me.knockback < 0) {
         player.direction = "left";
-        player.setVelocityX(-10*this.me.damage);
+        player.setVelocityX(-10 * this.me.damage);
         socket.emit("position", [player.x, player.y]);
         player.anims.play("left", true);
         this.me.knockback++;
       } else {
         player.direction = "right";
-        player.setVelocityX(10*this.me.damage);
+        player.setVelocityX(10 * this.me.damage);
         socket.emit("position", [player.x, player.y]);
         player.anims.play("right", true);
         this.me.knockback--;
@@ -188,9 +190,32 @@ export default class HelloWorldScene extends Phaser.Scene {
       socket.emit("position", [player.x, player.y]);
     }
 
-    if (cursors.up.isDown && player.body.touching.down) {
-      player.setVelocityY(-330);
+    if (player.body.onFloor()) {
+      jumpCount = 2;
     }
+    const didPressJump = Phaser.Input.Keyboard.JustDown(cursors.up);
+    if (didPressJump) {
+
+      if (player.body.onFloor()) {
+        jumpCount--
+        this.canDoubleJump = true;
+        player.body.setVelocityY(-200);
+      } 
+
+      else if (!player.body.onFloor() && jumpCount>0){
+        this.canDoubleJump=true;
+        jumpCount--;
+        player.body.setVelocityY(-200);
+
+        if (this.canDoubleJump) {
+
+          this.canDoubleJump = false;
+          player.body.setVelocityY(-200);
+        }
+      }
+    }
+
+    
 
     if (Phaser.Input.Keyboard.JustDown(hit)) {
       if (player.direction == "left") {
@@ -206,6 +231,8 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     // this.updateDamage();
   }
+
+  
 
   /*
    * create other player sprites and add them to the other player array
