@@ -39,15 +39,16 @@ io.on("connection", (socket) => {
    }); 
 
 
-    socket.broadcast.emit("playerPosition", [
-      id,
-      player.positionX,
-      player.positionY,
-    ]);
+  socket.broadcast.emit("playerPosition", [
+    id,
+    player.positionX,
+    player.positionY,
+  ]);
 
     
   //test room
-    socket.on("createRoom", (data) => {
+  socket.on("createRoom", (data) =>
+    {
       console.log("event createRoom");
 
       //data.name
@@ -57,23 +58,33 @@ io.on("connection", (socket) => {
       console.log('rooms' , rooms);
 
       io.sockets.emit("update", rooms);
-    });
+    }
+  );
 
     //test room
 
   socket.on('join',(data)=>
     {
-      const select = rooms.filter(room => data.id === room.id);
-      Object.keys(playerArray).push(player);
-      select.length ++;
+      console.log('data',data,rooms);
       
-      console.log(select);
+      const select = rooms.filter(room => 0 === room.id);
+
+      console.log('select1',select);
+
+      console.log(player);
+      
+      select[0].playerArray.push(player.socketID);
+
+      select[0].length ++;
+      
+      console.log('select',select);
       
 
       socket.emit('playerJoinRoom',rooms)
 
 
-      if (Object.keys(playerArray).length >= 2) {
+      if (select[0].playerArray.length >= 2)
+      {
         io.emit("party_ready", playerArray);
 
         console.log("game");

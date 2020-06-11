@@ -4,7 +4,7 @@ module.exports = class Room
     {
         this.id =id;
         this.name = name;
-        this.playerArray = {};
+        this.playerArray = [];
         this.length = 0;
     }
 
