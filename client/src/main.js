@@ -16,9 +16,6 @@ socket.on("socketID", (obj) => {
 });
 
 
-socket.emit('createRoom',{name:'hombre'})
-
-
 const config = {
   type: Phaser.AUTO,
   width: 800,

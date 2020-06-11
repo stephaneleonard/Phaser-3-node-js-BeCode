@@ -17,7 +17,7 @@ export default class GameScene extends Phaser.Scene {
 
     
      
-    socket.emit('createRoom',{name:'hombre'})
+    socket.emit('createRoom','data');
    
   }
 
