@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import {
-  socket
+  socket, socketID
 } from "../main";
 
 let player;
@@ -52,8 +52,9 @@ export default class HelloWorldScene extends Phaser.Scene {
       this.updatePlayerArray(obj);
     });
     socket.on('hit', (obj) => {
-      console.log(obj)
       this.updateDamage(obj);
+      this.updateText()
+
       // obj id damage
     })
     //texte
@@ -144,8 +145,7 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   update() {
-    this.updateText()
-
+    
     if (cursors.left.isDown) {
       player.direction = 'left'
       player.setVelocityX(-160);
@@ -161,28 +161,30 @@ export default class HelloWorldScene extends Phaser.Scene {
       player.anims.play("turn");
       socket.emit("position", [player.x, player.y]);
     }
-
+    
     if (cursors.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
     }
-
+    
     if(Phaser.Input.Keyboard.JustDown(hit)){
-        if(player.direction == "left"){
-          player.anims.play('hit_left',true);
-        }
-        else{
-          player.anims.play('hit_right',true);
-        }
-        this.hitPlayer(player,direction);
+      if(player.direction == "left"){
+        player.anims.play('hit_left',true);
+      }
+      else{
+        player.anims.play('hit_right',true);
+      }
+      this.hitPlayer(player,direction);
     }
-
+    
     //this.deadPlayer(player.x,player.y);
     this.updateDisplayedOtherPlayerPosition();
-
+    
+    // this.updateDamage();
+    
   }
-
+  
   /*
-   * create other player sprites and add them to the other player array
+  * create other player sprites and add them to the other player array
    * input: none
    * output: none
    */
@@ -221,8 +223,23 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   updateText() {
-    arrayText[0].setText("player 1 \n" + this.me.damage + "%")
+    console.log(this.me.damage);
+    
+    arrayText[0].setText("player 1 \n" + this.me.damage + "%");
+    let newDamage=[]
+    for (const key in this.playerArray) {
+      if (this.playerArray.hasOwnProperty(key)) {
+        let element = this.playerArray[key];
+        element = element.damage
+        newDamage.push(element)
+      }
+      console.log(arrayText);
+      
+      arrayText[1].setText("player 2 \n" + newDamage[0] + "%")
+      arrayText[2].setText("player 3 \n" + newDamage[1] + "%")
+      arrayText[3].setText("player 4 \n" + newDamage[2] + "%")
   }
+}
 
 
   hitPlayer(player, direction) {
@@ -241,6 +258,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     } else {
       this.playerArray[obj[0]].damage = obj[1];
     }
+    
   }
 
   deadPlayer(positionX,positionY){
