@@ -39,6 +39,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
+    this.load.audio('themeSong','/assets/theme.ogg');
   }
 
 
@@ -53,6 +54,19 @@ export default class HelloWorldScene extends Phaser.Scene {
     hit = this.input.keyboard.addKey("c");
     let myDamage = this.me.damage;
 
+
+    const musicConfig = {
+      mute: false,
+      volume: 1,
+      rate: 1,
+      detune:0,
+      seek:0,
+      loop:true,
+      delay:0
+    }
+    this.music = this.sound.add('themeSong');
+    this.music.play(musicConfig);
+  
     //on playerPosition event update the playerArray
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
@@ -201,8 +215,21 @@ export default class HelloWorldScene extends Phaser.Scene {
    */
   updateDisplayedOtherPlayerPosition() {
     Object.keys(this.playerArray).forEach((e) => {
-      otherPlayer[e].x = this.playerArray[e].positionX;
-      otherPlayer[e].y = this.playerArray[e].positionY;
+
+      if(otherPlayer[e].x > this.playerArray[e].positionX){
+        otherPlayer[e].x = this.playerArray[e].positionX;
+        otherPlayer[e].y = this.playerArray[e].positionY;
+        otherPlayer[e].anims.play('left');
+      }
+      else if(otherPlayer[e].x < this.playerArray[e].positionX){
+        otherPlayer[e].x = this.playerArray[e].positionX;
+        otherPlayer[e].y = this.playerArray[e].positionY;
+        otherPlayer[e].anims.play('right');
+      }else{
+        otherPlayer[e].x = this.playerArray[e].positionX;
+        otherPlayer[e].y = this.playerArray[e].positionY;
+        otherPlayer[e].anims.play('turn');
+      }
     });
   }
 
@@ -297,17 +324,28 @@ export default class HelloWorldScene extends Phaser.Scene {
   deadPlayer(positionX, positionY) {
     if (positionY > 700) {
       player.destroy();
+      this.music.stop();
+      this.scene.start('Welcome');
+      socket.emit('die');
       console.log("you died");
     } else if (positionY < -200) {
       player.destroy();
+      this.music.stop();
+      this.scene.start('Welcome');
+      socket.emit('die');
       console.log("you died");
     }
 
     if (positionX > 1000) {
       player.destroy();
+      this.music.stop();
+      this.scene.start('Welcome');
+      socket.emit('die');
       console.log("you're die");
     } else if (positionX < -200) {
       player.destroy();
+      this.music.stop();
+      this.scene.start('Welcome');
       console.log("you died");
     }
   }
