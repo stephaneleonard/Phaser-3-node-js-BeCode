@@ -65,7 +65,6 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.music = this.sound.add('themeSong');
     this.music.play(musicConfig);
   
-    console.log("me", this.me);
     //on playerPosition event update the playerArray
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
@@ -117,7 +116,6 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     this.physics.add.collider(player, platforms);
     this.displayOtherPlayer(this);
-    console.log(otherPlayer);
 
     //animation spritesheet
     this.anims.create({
@@ -271,8 +269,21 @@ export default class HelloWorldScene extends Phaser.Scene {
    */
   updateDisplayedOtherPlayerPosition() {
     Object.keys(this.playerArray).forEach((e) => {
-      otherPlayer[e].x = this.playerArray[e].positionX;
-      otherPlayer[e].y = this.playerArray[e].positionY;
+
+      if(otherPlayer[e].x > this.playerArray[e].positionX){
+        otherPlayer[e].x = this.playerArray[e].positionX;
+        otherPlayer[e].y = this.playerArray[e].positionY;
+        otherPlayer[e].anims.play('left');
+      }
+      else if(otherPlayer[e].x < this.playerArray[e].positionX){
+        otherPlayer[e].x = this.playerArray[e].positionX;
+        otherPlayer[e].y = this.playerArray[e].positionY;
+        otherPlayer[e].anims.play('right');
+      }else{
+        otherPlayer[e].x = this.playerArray[e].positionX;
+        otherPlayer[e].y = this.playerArray[e].positionY;
+        otherPlayer[e].anims.play('turn');
+      }
     });
   }
 
