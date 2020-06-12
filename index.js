@@ -96,11 +96,11 @@ io.on("connection", (socket) => {
       io.sockets.emit('playerJoinRoom',rooms)
       //app.use('/')
 
-      if (select[0].playerArray.length >= 2)
+      if (select[0].length >= 2)
       {
         io.emit("party_ready", select[0].playerArray);
 
-        io.sockets.emit("party_ready", select[0].playerArray)
+        io.sockets.emit("go", select[0].playerArray)
 
         //rooms.splice(rooms.indexOf(select),1);
 

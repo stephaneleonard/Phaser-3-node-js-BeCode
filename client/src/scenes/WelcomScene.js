@@ -86,16 +86,23 @@ export default class GameScene extends Phaser.Scene {
     );
 
 
-    socket.on('playerJoinRoom',(data)=>
-        {
-          console.log('Player has join room',data);
-          console.log(data);
+    // socket.on('playerJoinRoom',(data)=>
+    //     {
+    //       console.log('Player has join room',data);
+    //       console.log(data);
            
+    //     }
+    // );
+
+
+    socket.on("party_ready",()=>
+        {
+          console.log('finish');
         }
     );
 
 
-    socket.on("party_ready",()=>
+    socket.on("go",()=>
         {
           console.log('finish');
         }
