@@ -10,6 +10,10 @@ const playerArray = {};
 const rooms = [];
 
 let roomCount = 0;
+let incrementName = 1;
+let nameRoom = 'Room'+incrementName
+let displayRoomX = 100;
+let displayRoomY = 100
 
 app.use(express.static("public"));
 // app.use(express.static("/phaser3-parcel-template/dist/"));
@@ -22,6 +26,10 @@ io.on("connection", (socket) => {
   const id = socket.id;
   const player = new Player(id);
   io.to(id).emit("socketID", id);
+
+
+  //io.sockets.emit('update',rooms)
+
 
   //add player to the playerArray
   playerArray[id] = player;
@@ -45,19 +53,21 @@ io.on("connection", (socket) => {
     player.positionY,
   ]);
 
-    
   //test room
-  socket.on("createRoom", (data) =>
+  socket.on("createRoom", () =>
     {
       console.log("event createRoom");
-
-      //data.name
-      const room = new Room(roomCount, data);
+      
+      const room = new Room(roomCount, incrementName ,displayRoomX,displayRoomY);
+      displayRoomY +=20;
+      incrementName ++;
+      console.log('incrementName',incrementName);
+      
       roomCount++;
       rooms.push(room);
       console.log('rooms' , rooms);
 
-      io.sockets.emit("update", rooms);
+      io.sockets.emit("update", room);
     }
   );
 
@@ -65,30 +75,32 @@ io.on("connection", (socket) => {
 
   socket.on('join',(data)=>
     {
-      console.log('data',data,rooms);
+      //console.log('data',data,rooms);
       
-      const select = rooms.filter(room => 0 === room.id);
+      const select = rooms.filter(room => room.displayY === data.y);
 
       console.log('select1',select);
-      console.log(player);
+      //console.log(player);
       
-      select[0].playerArray.push(player.socketID);
+      select[0].playerArray[player.socketID] = player;
 
       select[0].length ++;
       
-      console.log('select',select);
+      //console.log('select',select);
       
 
-      socket.emit('playerJoinRoom',rooms)
+      io.sockets.emit('playerJoinRoom',rooms)
       //app.use('/')
 
-      if (select[0].playerArray.length >= 2)
+      if (select[0].playerArray.length >= 3)
       {
-        io.emit("party_ready", playerArray);
+        io.emit("party_ready", select[0].playerArray);
+
+        io.sockets.emit("party_ready", select[0].playerArray)
 
         rooms.splice(rooms.indexOf(select),1);
 
-        console.log(rooms);
+       // console.log(rooms);
         console.log("game");
       }
     }
@@ -112,7 +124,7 @@ io.on("connection", (socket) => {
   
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 server.listen(PORT, () => {
   console.log(`Server running`);

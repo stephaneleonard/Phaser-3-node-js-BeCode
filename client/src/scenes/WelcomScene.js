@@ -23,50 +23,57 @@ export default class GameScene extends Phaser.Scene {
      *
      */
     //let buttonJoin('button');
-
-    let nameRoomIncrement = 0;
-
+    
     buttonCreate.on('pointerdown',()=>
       {
-        socket.emit('createRoom',`Room${ + nameRoomIncrement + 1}`);
-        nameRoomIncrement++;
+        socket.emit('createRoom');
 
-        const room = this.add.sprite(100,100,'room')
+        // roomImage = this.add.sprite(displayRoomX,displayRoomY,'room').setInteractive();
+        // displayRoomY += 20;
+
       }
     );
-    
 
-    socket.on('update',(data,idRoom = 111)=>
-        {
-            console.log('update',data);
-            //create image and increment
+    //let inputRoomImage = {};
+    let roomImage;
+    socket.on('update',(data)=>
+      {
+        console.log('update',data);
+        console.log('dataY',data.displayY);
+        
+        roomImage = this.add.sprite(data.displayX,data.displayY,'room').setInteractive();
+        //inputRoomImage[data.name] = roomImage
+        //log increment
+        console.log(roomImage);
+         
 
-            buttonCreate.on('onclick',()=> //image not button
-              {
-                socket.emit('join',idRoom);
-              }
-            );  
-        }
+        roomImage.on('pointerdown',()=> 
+          {
+            socket.emit('join',roomImage);
+            console.log('pointerdown room image',roomImage); 
+          }
+        ); 
+      }
     );
 
 
     socket.on('joinEvent',(idRoom)=> //boutton
         {
-            buttonCreate.emit('join',idRoom);
+          buttonCreate.emit('join',idRoom);
         }
     );
 
 
     socket.on('playerJoinRoom',(data)=>
         {
-            console.log('Player has join room',data); 
+          console.log('Player has join room',data); 
         }
     );
 
 
     socket.on("party_ready",()=>
         {
-            console.log('finish');
+          console.log('finish');
         }
     );
   }
