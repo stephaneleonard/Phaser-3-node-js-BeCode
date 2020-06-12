@@ -21,7 +21,7 @@ io.on("connection", (socket) => {
   //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-  if (Object.keys(playerArray).length >= 4) {
+  if (Object.keys(playerArray).length >= 2) {
     io.sockets.emit("party_ready" , playerArray);
     console.log("test");
   }
@@ -54,7 +54,14 @@ io.on("connection", (socket) => {
     // delete this player from the array
     delete playerArray[id];
   });
+
+  socket.on('die',()=>{
+    delete playerArray[id];
+  })
 });
+
+  
+
 
 const PORT = process.env.PORT || 3000;
 

@@ -33,6 +33,6 @@ const config = {
       debug: false,
     },
   },
-  scene: [Preload, GameScene],
+  scene: [WelcomeScene, Preload, GameScene],
 };
 const game = new Phaser.Game(config);
