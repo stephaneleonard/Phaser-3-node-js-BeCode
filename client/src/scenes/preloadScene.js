@@ -18,7 +18,7 @@ export default class GameScene extends Phaser.Scene {
     this.background = this.add.image(-120, 0, "startBackground");
     this.background.setOrigin(0, 0);
     this.background.setScale(0.8);
-    this.add.text(250, 400, "Waiting for other players", {
+    this.add.text(220, 400, "Waiting for other players", {
       color: "black",
       fontSize: "25px",
     });

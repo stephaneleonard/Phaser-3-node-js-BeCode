@@ -4,6 +4,7 @@ module.exports = class Player {
     this.socketID = socket;
     this.positionX = 100;
     this.positionY = 100;
+    this.sprite;
     //player damage
     this.damage = 5;
     this.knockback = 0;

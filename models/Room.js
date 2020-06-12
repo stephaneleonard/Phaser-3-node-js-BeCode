@@ -4,8 +4,9 @@ module.exports = class Room {
     this.name = name;
     this.playerArray = {};
     this.length = 0;
-    this.displayX = displayX;
-    this.displayY = displayY;
+    this.numberOfDead = 0;
+    this.displayX = 100;
+    this.displayY = 100+20*this.id;
   }
 
   join = (player) => {
@@ -18,4 +19,9 @@ module.exports = class Room {
         return false;
     }
   };
+  dead = () => {
+      this.numberOfDead ++;
+      console.log('numberofDead',this.numberOfDead);
+      return this.numberOfDead == 1;
+  }
 };

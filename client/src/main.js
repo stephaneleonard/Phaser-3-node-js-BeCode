@@ -2,9 +2,8 @@ import Phaser, { Scene } from "phaser";
 
 import GameScene from "./scenes/GameScene";
 import Preload from "./scenes/preloadScene";
-import HelloWorldScene from "./scenes/GameScene";
-
 import WelcomeScene from "./scenes/WelcomScene";
+import Home from "./scenes/Welcome";
 // import smashGameScene from "./scenes/smashGameScene";
 export const socket = io();
 export let socketID = null;
@@ -19,7 +18,7 @@ socket.on("socketID", (obj) => {
 socket.on("party_ready", (obj) => {
   // update playerArray
   console.log("ready");
-  console.log("playerArray" , obj);
+  console.log("playerArray", obj);
   let playerArray = obj;
   let me = { ...obj[socketID] };
   delete playerArray[socketID];
@@ -45,6 +44,6 @@ const config = {
       debug: false,
     },
   },
-  scene: [WelcomeScene, Preload, GameScene],
+  scene: [WelcomeScene, Preload, GameScene , Home],
 };
 const game = new Phaser.Game(config);

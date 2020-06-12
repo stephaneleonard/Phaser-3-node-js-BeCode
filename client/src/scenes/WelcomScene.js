@@ -3,99 +3,72 @@ import { socket, socketID } from "../main";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
-    super("welcom-scene");
+    super("welcomescene");
   }
 
-  preload(){
-
+  preload() {
     this.load.image("background", "/assets/background_final.png");
-    this.load.image('button', "/assets/button.png");
-    this.load.image('room',"/assets/star.png")
+    this.load.image("button", "/assets/button.png");
+    this.load.image("room", "/assets/star.png");
   }
 
-  create(){
+  create() {
+    this.add.image(300, 200, "background");
+    console.log("coucou");
 
-    this.add.image(300,200,'background');
-    const buttonCreate = this.add.sprite(400,500,"button").setInteractive();    
+    const buttonCreate = this.add.sprite(400, 500, "button").setInteractive();
 
     /*
      * when party is ready launch next scene and pass it the array with the other players object
      *
      */
     //let buttonJoin('button');
-    
-    buttonCreate.on('pointerdown',()=>
-      {
-        socket.emit('createRoom');
 
-        // roomImage = this.add.sprite(displayRoomX,displayRoomY,'room').setInteractive();
-        // displayRoomY += 20;
+    buttonCreate.on("pointerdown", () => {
+      socket.emit("createRoom");
 
-      }
-    );
+      // roomImage = this.add.sprite(displayRoomX,displayRoomY,'room').setInteractive();
+      // displayRoomY += 20;
+    });
 
     let roomImage;
 
-    socket.on('log',(data)=>
-      {
-        console.log('update',data);
-        console.log('dataY',data.displayY);
-        
-        roomImage = this.add.sprite(data.displayX,data.displayY,'room').setInteractive();
-        //inputRoomImage[data.name] = roomImage
-        //log increment
-        console.log(roomImage);
-        
-
-        roomImage.on('pointerdown',()=> 
-          {
-            socket.emit('join',roomImage);
-            console.log('pointerdown room image',roomImage); 
-          }
-        ); 
-      }
-    );
-
-
     //let inputRoomImage = {};
-    socket.on('update',(data)=>
-      {
-        console.log('update',data);
-        console.log('dataY',data.displayY);
-        
-        roomImage = this.add.sprite(data.displayX,data.displayY,'room').setInteractive();
-        //inputRoomImage[data.name] = roomImage
-        //log increment
-        console.log(roomImage);
-         
+    socket.on("update", (data) => {
+      data.forEach((element) => {
+        if (element) {
+          const roomID = element.id;
+          console.log("update", element);
+          console.log("dataY", element.displayY);
 
-        roomImage.on('pointerdown',()=> 
-          {
-            socket.emit('join',roomImage);
-            console.log('pointerdown room image',roomImage); 
-          }
-        ); 
+          roomImage = this.add
+            .sprite(element.displayX, element.displayY, "room")
+            .setInteractive();
+          //inputRoomImage[data.name] = roomImage
+          //log increment
+          console.log("roomimage", roomImage);
+
+          roomImage.on("pointerdown", () => {
+            socket.emit("join", roomID);
+            console.log("pointerdown room image", roomImage);
+          });
+        }
+      });
+    });
+
+    socket.on(
+      "joinEvent",
+      (
+        idRoom //boutton
+      ) => {
+        buttonCreate.emit("join", idRoom);
       }
     );
 
-
-    socket.on('joinEvent',(idRoom)=> //boutton
-        {
-          buttonCreate.emit('join',idRoom);
-        }
-    );
-
-
-    
-
-
-    socket.on("party_ready",()=>
-        {
-          console.log('finish');
-        }
-    );
+    socket.on("party_ready", () => {
+      console.log("finish");
+    });
   }
 
   update() {}
 }
-

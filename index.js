@@ -7,13 +7,11 @@ const Player = require("./models/Player");
 const Room = require("./models/Room");
 
 const playerArray = {};
-const rooms = [];
+const rooms = [null, null, null, null, null, null, null, null, null, null];
 
 let roomCount = 0;
 let incrementName = 1;
 let nameRoom = "Room" + incrementName;
-let displayRoomX = 100;
-let displayRoomY = 100;
 
 app.use(express.static("public"));
 // app.use(express.static("/phaser3-parcel-template/dist/"));
@@ -49,17 +47,20 @@ io.on("connection", (socket) => {
   //test room
   socket.on("createRoom", () => {
     console.log("event createRoom");
-
-    const room = new Room(roomCount, incrementName, displayRoomX, displayRoomY);
-    displayRoomY += 20;
-    incrementName++;
-    console.log("incrementName", incrementName);
-
-    roomCount++;
-    rooms.push(room);
+    let found = false;
+    for (let i = 0; found == false && i<10; i++) {
+      if (rooms[i] == null) {
+        const room = new Room(i, incrementName);
+        incrementName++;
+        console.log("incrementName", incrementName);
+        roomCount++;
+        rooms[i] = room;
+        found = true;
+      }
+    }
     console.log("rooms", rooms);
 
-    io.sockets.emit("update", room);
+    io.sockets.emit("update", rooms);
   });
 
   //test room
@@ -67,24 +68,25 @@ io.on("connection", (socket) => {
   socket.on("join", (data) => {
     //console.log('data',data,rooms);
 
-    const select = rooms.filter((room) => room.displayY === data.y);
+    const select = rooms[data];
 
     console.log("select1", select);
 
     //Add player to the room if possible
-    const res = select[0].join(player);
-    console.log(select[0]);
+    const res = select.join(player);
+    console.log(select);
     if (res) {
-      socket.join(select[0].roomID);
-      roomID = select[0].roomID;
+      roomID = select.id;
+      socket.join(roomID);
+      console.log("roomID", roomID);
 
       //console.log('select',select);
 
       socket.emit("playerJoinRoom", rooms);
       //app.use('/')
 
-      if (select[0].length >= 2) {
-        io.sockets.in(roomID).emit("party_ready", select[0].playerArray);
+      if (select.length >= 2) {
+        io.sockets.in(roomID).emit("party_ready", select.playerArray);
 
         //rooms.splice(rooms.indexOf(select),1);
 
@@ -105,6 +107,20 @@ io.on("connection", (socket) => {
     //console.log(`player ${id} disconected`);
     // delete this player from the array
     delete playerArray[id];
+  });
+
+  socket.on("die", () => {
+    console.log("roomID", roomID);
+    console.log("dead");
+    //update number of dead in the game
+    const res = rooms[roomID].dead();
+    if (res) {
+      io.sockets.in(roomID).emit("party_ended");
+      socket.leave(roomID);
+      rooms[roomID] = null;
+      roomCount--;
+      console.log("rooms after delete", rooms);
+    }
   });
 });
 
