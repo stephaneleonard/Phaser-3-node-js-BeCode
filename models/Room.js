@@ -10,7 +10,7 @@ module.exports = class Room {
   }
 
   join = (player) => {
-    if (this.length < 2) {
+    if (this.length < 4) {
       this.playerArray[player.socketID] = player;
       this.length++;
       return true;
@@ -22,6 +22,6 @@ module.exports = class Room {
   dead = () => {
       this.numberOfDead ++;
       console.log('numberofDead',this.numberOfDead);
-      return this.numberOfDead == 1;
+      return this.numberOfDead == 3;
   }
 };

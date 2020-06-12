@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
       socket.emit("playerJoinRoom", rooms);
       //app.use('/')
 
-      if (select.length >= 2) {
+      if (select.length >= 4) {
         io.sockets.in(roomID).emit("party_ready", select.playerArray);
 
         //rooms.splice(rooms.indexOf(select),1);
