@@ -1,5 +1,8 @@
 import Phaser from "phaser";
-import { socket, socketID } from "../main";
+import {
+  socket,
+  socketID
+} from "../main";
 
 let player;
 let otherPlayer = {};
@@ -9,6 +12,7 @@ let hit;
 let direction = 1;
 let arrayText = [];
 let jumpCount = 2;
+let damage = [];
 
 const backgroundTab = [
   "/assets/background_final.png",
@@ -21,15 +25,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     super("hello-world");
   }
 
-  /*
-   * load the otherPlayer array into this scene
-   * input: otherPlayerArray from the previous scene
-   * output: none
-   */
-  init(data) {
-    this.playerArray = data.playerArray;
-    this.me = data.me;
-  }
+
 
   /*
    * preload the sprites and images
@@ -45,65 +41,51 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
   }
 
+
+
   /*
    * create the elements
    * input: none
    * output: none
    */
   create() {
-    console.log("me", this.me);
+    cursors = this.input.keyboard.createCursorKeys();
+    hit = this.input.keyboard.addKey("c");
+    let myDamage = this.me.damage;
+
     //on playerPosition event update the playerArray
     socket.on("playerPosition", (obj) => {
       this.updatePlayerArray(obj);
     });
+
     socket.on("hit", (obj) => {
+      // obj id damage
       this.updateDamage(obj);
       this.updateText();
-
-      // obj id damage
     });
     //texte
 
-    //personnages
+    //display
     this.background = this.add.image(0, 0, "background");
     this.background.setScale(0.7);
     this.background.setOrigin(0, 0);
-
     platforms = this.physics.add.staticGroup();
     platforms.create(400, 400, "ground").setScale(0.2).refreshBody();
 
-    let damage = [];
-    let myDamage = this.me.damage;
-    for (const key in this.playerArray) {
-      if (this.playerArray.hasOwnProperty(key)) {
-        let element = this.playerArray[key];
-        element = element.damage;
-        damage.push(element);
-      }
-    }
-    arrayText.push(
-      addText(this, 50, "#ff0044", "player 1 \n" + myDamage + "%")
-    );
-    arrayText.push(
-      addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%")
-    );
-    arrayText.push(
-      addText(this, 450, "#6c4c7b", "player 3 \n" + damage[1] + "%")
-    );
-    arrayText.push(
-      addText(this, 650, "#E0B3C5", "player 4 \n " + damage[2] + "%")
-    );
+    this.pushDamageInArray()
 
+    //update display damage
+    arrayText[0] = (this.addText(this, 50, "#ff0044", "player 1 \n" + myDamage + "%"));
+    arrayText[1] = (this.addText(this, 250, "#F0FF00", "player 2 \n" + damage[0] + "%"));
+    arrayText[2] = (this.addText(this, 450, "#c920f6", "player 3 \n" + damage[1] + "%"));
+    arrayText[3] = (this.addText(this, 650, "#E0B3C5", "player 4 \n " + damage[2] + "%"));
+
+    //physics
     player = this.physics.add.sprite(250, 200, "dude");
     player.direction = "right";
     player.setCollideWorldBounds(false);
-    console.log(player);
-    cursors = this.input.keyboard.createCursorKeys();
-    hit = this.input.keyboard.addKey("c");
-
     this.physics.add.collider(player, platforms);
     this.displayOtherPlayer(this);
-    console.log(otherPlayer);
 
     //animation spritesheet
     this.anims.create({
@@ -115,6 +97,7 @@ export default class HelloWorldScene extends Phaser.Scene {
       frameRate: 10,
       repeat: -1,
     });
+
     this.anims.create({
       key: "right",
       frames: this.anims.generateFrameNumbers("dude", {
@@ -126,14 +109,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
     this.anims.create({
       key: "turn",
-      frames: [
-        {
-          key: "dude",
-          frame: 131,
-        },
-      ],
+      frames: [{
+        key: "dude",
+        frame: 131,
+      }, ],
       frameRate: 24,
     });
+
     this.anims.create({
       key: "hit_left",
       frames: this.anims.generateFrameNumbers("dude", {
@@ -154,6 +136,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     });
   }
 
+
   /*
    * update the elements and send player position via socket.io
    * input: none
@@ -161,78 +144,39 @@ export default class HelloWorldScene extends Phaser.Scene {
    */
   update() {
     if (this.me.knockback != 0) {
-      if (this.me.knockback < 0) {
-        player.direction = "left";
-        player.setVelocityX(-10 * this.me.damage);
-        socket.emit("position", [player.x, player.y]);
-        player.anims.play("left", true);
-        this.me.knockback++;
-      } else {
-        player.direction = "right";
-        player.setVelocityX(10 * this.me.damage);
-        socket.emit("position", [player.x, player.y]);
-        player.anims.play("right", true);
-        this.me.knockback--;
-      }
+      this.knockBack();
+      socket.emit("position", [player.x, player.y]);
+
     } else if (cursors.left.isDown) {
-      player.direction = "left";
-      player.setVelocityX(-160);
+      this.moveLeft()
       socket.emit("position", [player.x, player.y]);
-      player.anims.play("left", true);
+
     } else if (cursors.right.isDown) {
-      player.direction = "right";
-      player.setVelocityX(160);
+      this.moveRight()
       socket.emit("position", [player.x, player.y]);
-      player.anims.play("right", true);
+
     } else {
-      player.setVelocityX(0);
-      player.anims.play("turn");
+      this.turn()
       socket.emit("position", [player.x, player.y]);
     }
 
-    if (player.body.onFloor()) {
-      jumpCount = 2;
-    }
-    const didPressJump = Phaser.Input.Keyboard.JustDown(cursors.up);
-    if (didPressJump) {
-
-      if (player.body.onFloor()) {
-        jumpCount--
-        this.canDoubleJump = true;
-        player.body.setVelocityY(-200);
-      } 
-
-      else if (!player.body.onFloor() && jumpCount>0){
-        this.canDoubleJump=true;
-        jumpCount--;
-        player.body.setVelocityY(-200);
-
-        if (this.canDoubleJump) {
-
-          this.canDoubleJump = false;
-          player.body.setVelocityY(-200);
-        }
-      }
-    }
-
-    
-
-    if (Phaser.Input.Keyboard.JustDown(hit)) {
-      if (player.direction == "left") {
-        player.anims.play("hit_left", true);
-      } else {
-        player.anims.play("hit_right", true);
-      }
-      this.hitPlayer(player, direction);
-    }
-
+    this.doubleJump()
+    this.animeAttack()
     this.deadPlayer(player.x, player.y);
     this.updateDisplayedOtherPlayerPosition();
-
-    // this.updateDamage();
   }
 
-  
+
+  /*
+   * load the otherPlayer array into this scene
+   * input: otherPlayerArray from the previous scene
+   * output: none
+   */
+  init(data) {
+    this.playerArray = data.playerArray;
+    this.me = data.me;
+  }
+
 
   /*
    * create other player sprites and add them to the other player array
@@ -272,9 +216,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.playerArray[obj[0]].positionX = obj[1];
   }
 
-  updateText() {
-    console.log(this.me.damage);
 
+  /*
+   * get all players Damage
+   * input: none
+   * output: none
+   */
+  updateText() {
     arrayText[0].setText("player 1 \n" + this.me.damage + "%");
     let newDamage = [];
     for (const key in this.playerArray) {
@@ -291,6 +239,30 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
   }
 
+  moveLeft() {
+    player.direction = "left";
+    player.setVelocityX(-160);
+    player.anims.play("left", true);
+  }
+  moveRight() {
+    player.direction = "right";
+    player.setVelocityX(160);
+    player.anims.play("right", true);
+  }
+  turn() {
+    player.setVelocityX(0);
+    player.anims.play("turn");
+  }
+  animeAttack() {
+    if (Phaser.Input.Keyboard.JustDown(hit)) {
+      if (player.direction == "left") {
+        player.anims.play("hit_left", true);
+      } else {
+        player.anims.play("hit_right", true);
+      }
+      this.hitPlayer(player, direction);
+    }
+  }
   hitPlayer(player, direction) {
     if (player.direction == "right") {
       direction = 1;
@@ -339,12 +311,73 @@ export default class HelloWorldScene extends Phaser.Scene {
       console.log("you died");
     }
   }
-}
+  doubleJump() {
 
-function addText(scene, x, fill, text) {
-  var style = {
-    font: "25px Arial",
-    fill: fill,
-  };
-  return scene.add.text(x, 440, text, style);
+    if (player.body.onFloor()) {
+      jumpCount = 2;
+    }
+    const didPressJump = Phaser.Input.Keyboard.JustDown(cursors.up);
+    if (didPressJump) {
+
+      if (player.body.onFloor()) {
+        jumpCount--
+        this.canDoubleJump = true;
+        player.body.setVelocityY(-200);
+      } else if (!player.body.onFloor() && jumpCount > 0) {
+        this.canDoubleJump = true;
+        jumpCount--;
+        player.body.setVelocityY(-200);
+
+        if (this.canDoubleJump) {
+
+          this.canDoubleJump = false;
+          player.body.setVelocityY(-200);
+        }
+      }
+    }
+  }
+  knockBack() {
+    if (this.me.knockback < 0) {
+      player.direction = "left";
+      player.setVelocityX(-10 * this.me.damage);
+      player.anims.play("left", true);
+      this.me.knockback++;
+    } else {
+      player.direction = "right";
+      player.setVelocityX(10 * this.me.damage);
+      socket.emit("position", [player.x, player.y]);
+      player.anims.play("right", true);
+      this.me.knockback--;
+    }
+
+  }
+
+  /*
+   * get all players damage 
+   * input: none
+   * output: none
+   */
+  pushDamageInArray() {
+    for (const key in this.playerArray) {
+      if (this.playerArray.hasOwnProperty(key)) {
+        let element = this.playerArray[key];
+        element = element.damage;
+        damage.push(element);
+      }
+    }
+  }
+
+
+  /*
+   * display damage % 
+   * input: none
+   * output: none
+   */
+  addText(scene, x, fill, text) {
+    var style = {
+      font: "25px Arial",
+      fill: fill,
+    };
+    return scene.add.text(x, 440, text, style);
+  }
 }
