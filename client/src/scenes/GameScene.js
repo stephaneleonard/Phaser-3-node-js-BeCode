@@ -128,7 +128,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         end:72
       }),
       frameRate:10,
-      repeat:-1,
+      repeat:1,
     })
     this.anims.create({
       key:'hit_right',
@@ -137,7 +137,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         end:98
       }),
       frameRate:10,
-      repeat:-1,
+      repeat:1,
     })
   }
 
@@ -148,25 +148,25 @@ export default class HelloWorldScene extends Phaser.Scene {
    */
   update() {
     
-    if (cursors.left.isDown) {
-      player.direction = 'left'
-      player.setVelocityX(-160);
-      socket.emit("position", [player.x, player.y]);
-      player.anims.play("left", true);
-    } else if (cursors.right.isDown) {
-      player.direction = 'right';
-      player.setVelocityX(160);
-      socket.emit("position", [player.x, player.y]);
-      player.anims.play("right", true);
-    } else {
-      player.setVelocityX(0);
-      player.anims.play("turn");
-      socket.emit("position", [player.x, player.y]);
-    }
+    // if (cursors.left.isDown) {
+    //   player.direction = 'left'
+    //   player.setVelocityX(-160);
+    //   socket.emit("position", [player.x, player.y]);
+    //   player.anims.play("left", true);
+    // } else if (cursors.right.isDown) {
+    //   player.direction = 'right';
+    //   player.setVelocityX(160);
+    //   socket.emit("position", [player.x, player.y]);
+    //   player.anims.play("right", true);
+    // } else {
+    //   player.setVelocityX(0);
+    //   player.anims.play("turn");
+    //   socket.emit("position", [player.x, player.y]);
+    // }
     
-    if (cursors.up.isDown && player.body.touching.down) {
-      player.setVelocityY(-330);
-    }
+    // if (cursors.up.isDown && player.body.touching.down) {
+    //   player.setVelocityY(-330);
+    // }
     
     if(Phaser.Input.Keyboard.JustDown(hit)){
       if(player.direction == "left"){
