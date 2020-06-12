@@ -69,7 +69,15 @@ io.on("connection", (socket) => {
       console.log("event createRoom");
       
       const room = new Room(roomCount, incrementName ,displayRoomX,displayRoomY);
-      displayRoomX +=500;
+      displayRoomX +=200;
+      
+      if (displayRoomX > 800)
+      {
+        displayRoomX = 100;
+        displayRoomY += 200 
+      }
+
+
       incrementName ++;
       //console.log('incrementName',incrementName);
       
