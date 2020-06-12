@@ -25,10 +25,11 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   const id = socket.id;
   const player = new Player(id);
+  
   io.to(id).emit("socketID", id);
 
 
-  //io.sockets.emit('update',rooms)
+  
 
 
   //add player to the playerArray
@@ -46,12 +47,15 @@ io.on("connection", (socket) => {
     player.move(obj);
    }); 
 
+  
 
   socket.broadcast.emit("playerPosition", [
     id,
     player.positionX,
     player.positionY,
   ]);
+  socket.on('Imlog',()=>{io.sockets.emit('log',rooms)})
+
 
   //test room
   socket.on("createRoom", () =>
@@ -92,13 +96,13 @@ io.on("connection", (socket) => {
       io.sockets.emit('playerJoinRoom',rooms)
       //app.use('/')
 
-      if (select[0].playerArray.length >= 3)
+      if (select[0].playerArray.length >= 2)
       {
         io.emit("party_ready", select[0].playerArray);
 
         io.sockets.emit("party_ready", select[0].playerArray)
 
-        rooms.splice(rooms.indexOf(select),1);
+        //rooms.splice(rooms.indexOf(select),1);
 
        // console.log(rooms);
         console.log("game");

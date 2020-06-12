@@ -34,8 +34,30 @@ export default class GameScene extends Phaser.Scene {
       }
     );
 
-    //let inputRoomImage = {};
     let roomImage;
+
+    socket.on('log',(data)=>
+      {
+        console.log('update',data);
+        console.log('dataY',data.displayY);
+        
+        roomImage = this.add.sprite(data.displayX,data.displayY,'room').setInteractive();
+        //inputRoomImage[data.name] = roomImage
+        //log increment
+        console.log(roomImage);
+        
+
+        roomImage.on('pointerdown',()=> 
+          {
+            socket.emit('join',roomImage);
+            console.log('pointerdown room image',roomImage); 
+          }
+        ); 
+      }
+    );
+
+
+    //let inputRoomImage = {};
     socket.on('update',(data)=>
       {
         console.log('update',data);
@@ -66,7 +88,9 @@ export default class GameScene extends Phaser.Scene {
 
     socket.on('playerJoinRoom',(data)=>
         {
-          console.log('Player has join room',data); 
+          console.log('Player has join room',data);
+          console.log(data);
+           
         }
     );
 
