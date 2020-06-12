@@ -6,9 +6,9 @@ Création d'un jeu vidéo (Node.js + Phaser 3).
 * Team  
   * [Angélique Corbisier](https://github.com/angeliquecorbisier)  
   * [Emmanuel Meunier](https://github.com/Meunier-Emmanuel)  
-  * [Pierre Lorand](https://github.com/j-pard)
-  * [Stéphane Léonard](https://github.com/j-pard)
-  * [Pirnay Kevin](https://github.com/j-pard)
+  * [Pierre Lorand](https://github.com/Pierre014)
+  * [Stéphane Léonard](https://github.com/stephaneleonard)
+  * [Pirnay Kevin](https://github.com/Kevin-Pirnay)
 
 
 
