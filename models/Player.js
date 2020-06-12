@@ -6,6 +6,7 @@ module.exports = class Player {
     this.positionY = 100;
     //player damage
     this.damage = 5;
+    this.knockback = 0;
   }
 
   move(array) {
@@ -60,7 +61,11 @@ module.exports = class Player {
               `player: ${e} in ${playerArray[e].positionX} has been hit by ${self.socketID} on ${self.positionX}`
             );
             playerArray[e].damage += 5;
-            io.emit("hit", [playerArray[e].socketID, playerArray[e].damage]);
+            io.emit("hit", [
+              playerArray[e].socketID,
+              playerArray[e].damage,
+              direction,
+            ]);
           }
         } else {
           distance = this.positionX - this.range;
@@ -74,7 +79,11 @@ module.exports = class Player {
             console.log(
               `player: ${e} in ${playerArray[e].positionX} has been hit by ${self.socketID} on ${self.positionX}`
             );
-            io.emit("hit", [playerArray[e].socketID, playerArray[e].damage]);
+            io.emit("hit", [
+              playerArray[e].socketID,
+              playerArray[e].damage,
+              direction,
+            ]);
             playerArray[e].damage += 5;
           }
         }
