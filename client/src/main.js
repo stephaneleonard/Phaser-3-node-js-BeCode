@@ -19,6 +19,7 @@ socket.on("socketID", (obj) => {
 socket.on("party_ready", (obj) => {
   // update playerArray
   console.log("ready");
+  console.log("playerArray" , obj);
   let playerArray = obj;
   let me = { ...obj[socketID] };
   delete playerArray[socketID];

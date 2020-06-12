@@ -195,27 +195,21 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
     const didPressJump = Phaser.Input.Keyboard.JustDown(cursors.up);
     if (didPressJump) {
-
       if (player.body.onFloor()) {
-        jumpCount--
+        jumpCount--;
         this.canDoubleJump = true;
         player.body.setVelocityY(-200);
-      } 
-
-      else if (!player.body.onFloor() && jumpCount>0){
-        this.canDoubleJump=true;
+      } else if (!player.body.onFloor() && jumpCount > 0) {
+        this.canDoubleJump = true;
         jumpCount--;
         player.body.setVelocityY(-200);
 
         if (this.canDoubleJump) {
-
           this.canDoubleJump = false;
           player.body.setVelocityY(-200);
         }
       }
     }
-
-    
 
     if (Phaser.Input.Keyboard.JustDown(hit)) {
       if (player.direction == "left") {
@@ -231,8 +225,6 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     // this.updateDamage();
   }
-
-  
 
   /*
    * create other player sprites and add them to the other player array
@@ -268,6 +260,8 @@ export default class HelloWorldScene extends Phaser.Scene {
    * output: none
    */
   updatePlayerArray(obj) {
+    console.log('input position',obj);
+    console.log('playerArrayBeforeUpdate' , this.playerArray)
     this.playerArray[obj[0]].positionY = obj[2];
     this.playerArray[obj[0]].positionX = obj[1];
   }

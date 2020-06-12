@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   const id = socket.id;
   const player = new Player(id);
+  let roomID = null;
 
   io.to(id).emit("socketID", id);
 
@@ -37,11 +38,9 @@ io.on("connection", (socket) => {
     const player = playerArray[socket.id];
     player.move(obj);
 
-    socket.broadcast.emit("playerPosition", [
-      id,
-      player.positionX,
-      player.positionY,
-    ]);
+    socket.broadcast
+      .to(roomID)
+      .emit("playerPosition", [id, player.positionX, player.positionY]);
   });
   socket.on("Imlog", () => {
     io.sockets.emit("log", rooms);
@@ -71,25 +70,27 @@ io.on("connection", (socket) => {
     const select = rooms.filter((room) => room.displayY === data.y);
 
     console.log("select1", select);
-    //console.log(player);
 
-    select[0].playerArray[player.socketID] = player;
+    //Add player to the room if possible
+    const res = select[0].join(player);
+    console.log(select[0]);
+    if (res) {
+      socket.join(select[0].roomID);
+      roomID = select[0].roomID;
 
-    select[0].length++;
-    socket.join(select[0].roomID);
+      //console.log('select',select);
 
-    //console.log('select',select);
+      socket.emit("playerJoinRoom", rooms);
+      //app.use('/')
 
-    socket.emit("playerJoinRoom", rooms);
-    //app.use('/')
+      if (select[0].length >= 2) {
+        io.sockets.in(roomID).emit("party_ready", select[0].playerArray);
 
-    if (select[0].length >= 2) {
-      io.sockets.emit("party_ready", select[0].playerArray);
+        //rooms.splice(rooms.indexOf(select),1);
 
-      //rooms.splice(rooms.indexOf(select),1);
-
-      // console.log(rooms);
-      console.log("game");
+        // console.log(rooms);
+        console.log("game");
+      }
     }
   });
 
