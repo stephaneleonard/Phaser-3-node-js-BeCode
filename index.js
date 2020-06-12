@@ -21,20 +21,27 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
-
+//------------------------------------------------------------------------------
 io.on("connection", (socket) => {
+
+  console.log(rooms);
+
+  console.log('emit rooms');
+  
+
   const id = socket.id;
   const player = new Player(id);
   
   io.to(id).emit("socketID", id);
 
+  socket.emit('log',rooms);
 
-  
+
 
 
   //add player to the playerArray
   playerArray[id] = player;
-  console.log(playerArray);
+  //console.log(playerArray);
   if (Object.keys(playerArray).length >= 2) {
     io.emit("party_ready", playerArray);
     //console.log("test");
@@ -54,7 +61,6 @@ io.on("connection", (socket) => {
     player.positionX,
     player.positionY,
   ]);
-  socket.on('Imlog',()=>{io.sockets.emit('log',rooms)})
 
 
   //test room
@@ -63,15 +69,15 @@ io.on("connection", (socket) => {
       console.log("event createRoom");
       
       const room = new Room(roomCount, incrementName ,displayRoomX,displayRoomY);
-      displayRoomY +=20;
+      displayRoomX +=500;
       incrementName ++;
-      console.log('incrementName',incrementName);
+      //console.log('incrementName',incrementName);
       
       roomCount++;
       rooms.push(room);
-      console.log('rooms' , rooms);
+     // console.log('rooms' , rooms);
 
-      io.sockets.emit("update", room);
+      io.sockets.emit("update", rooms);
     }
   );
 
@@ -80,10 +86,10 @@ io.on("connection", (socket) => {
   socket.on('join',(data)=>
     {
       //console.log('data',data,rooms);
-      
+      //io.sockets.emit("update", rooms);
       const select = rooms.filter(room => room.displayY === data.y);
 
-      console.log('select1',select);
+      //console.log('select1',select);
       //console.log(player);
       
       select[0].playerArray[player.socketID] = player;
