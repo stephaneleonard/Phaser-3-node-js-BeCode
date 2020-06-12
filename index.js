@@ -21,8 +21,8 @@ io.on("connection", (socket) => {
   //add player to the playerArray
   playerArray[id] = player;
   console.log(playerArray);
-  if (Object.keys(playerArray).length >= 4) {
-    io.sockets.emit("party_ready" , playerArray);
+  if (Object.keys(playerArray).length >= 2) {
+    io.sockets.emit("party_ready", playerArray);
     console.log("test");
   }
   console.log(`player ${id} connected`);
@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
   socket.on("position", (obj) => {
     const player = playerArray[socket.id];
     player.move(obj);
-    
+
     socket.broadcast.emit("playerPosition", [
       id,
       player.positionX,
@@ -39,12 +39,12 @@ io.on("connection", (socket) => {
     ]);
 
     //test
-    
+
   });
 
   socket.on("hit", (dir) => {
     // check if hit
-    player.hasHitOtherPlayer(playerArray , dir , io);
+    player.hasHitOtherPlayer(playerArray, dir, io);
     console.log(playerArray);
     // update damage count on players hit and send this value to those player
   });

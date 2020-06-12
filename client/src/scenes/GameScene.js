@@ -188,8 +188,10 @@ export default class HelloWorldScene extends Phaser.Scene {
     console.log("playerArray", self.playerArray);
 
     Object.keys(this.playerArray).forEach((e) => {
+      var randomColor = (Math.random() * 0xffffff);
       let pl = self.physics.add.sprite(270, 300, "dude");
       pl.setCollideWorldBounds(true);
+      pl.setTint(randomColor);
       this.physics.add.collider(pl, platforms);
       otherPlayer[e] = pl;
     });
