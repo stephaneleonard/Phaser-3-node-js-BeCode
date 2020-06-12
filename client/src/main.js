@@ -3,7 +3,7 @@ import Phaser, { Scene } from "phaser";
 import GameScene from "./scenes/GameScene";
 import Preload from "./scenes/preloadScene";
 import WelcomeScene from "./scenes/WelcomScene";
-import Home from "./scenes/Welcome";
+import End from "./scenes/End";
 // import smashGameScene from "./scenes/smashGameScene";
 export const socket = io();
 export let socketID = null;
@@ -44,6 +44,6 @@ const config = {
       debug: false,
     },
   },
-  scene: [WelcomeScene, Preload, GameScene , Home],
+  scene: [WelcomeScene, Preload, GameScene,End],
 };
 const game = new Phaser.Game(config);
