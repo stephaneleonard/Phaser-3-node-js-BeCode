@@ -201,8 +201,10 @@ export default class HelloWorldScene extends Phaser.Scene {
     console.log("playerArray", self.playerArray);
 
     Object.keys(this.playerArray).forEach((e) => {
+      var randomColor = (Math.random() * 0xffffff);
       let pl = self.physics.add.sprite(270, 300, "dude");
       pl.setCollideWorldBounds(true);
+      pl.setTint(randomColor);
       this.physics.add.collider(pl, platforms);
       otherPlayer[e] = pl;
     });
@@ -325,13 +327,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     if (positionY > 700) {
       player.destroy();
       this.music.stop();
-      this.scene.start('Welcome');
+      this.scene.start('end');
       socket.emit('die');
       console.log("you died");
     } else if (positionY < -200) {
       player.destroy();
       this.music.stop();
-      this.scene.start('Welcome');
+      this.scene.start('end');
       socket.emit('die');
       console.log("you died");
     }
@@ -339,13 +341,13 @@ export default class HelloWorldScene extends Phaser.Scene {
     if (positionX > 1000) {
       player.destroy();
       this.music.stop();
-      this.scene.start('Welcome');
+      this.scene.start('end');
       socket.emit('die');
       console.log("you're die");
     } else if (positionX < -200) {
       player.destroy();
       this.music.stop();
-      this.scene.start('Welcome');
+      this.scene.start('end');
       console.log("you died");
     }
   }
